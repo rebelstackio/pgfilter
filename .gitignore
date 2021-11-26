@@ -1,0 +1,15 @@
+.vagrant
+vpass
+credentials/
+hosts
+vagrant/.vagrant
+node_modules
+.nyc_output
+coverage
+dist/
+*.log
+*.dump
+scripts/clone/
+scripts/log/
+scripts/time/
+clonable
