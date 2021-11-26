@@ -8,7 +8,7 @@ const pfgilter = require('commander');
 const PGFILTER_VERSION = require('./package.json').version;
 
 pfgilter
-	.name('pg_restore_filter')
+	.name('pgfilter')
 	.option('-f, --filter-file <filterFile>', 'Filter file . Default to /var/opt/pgfilter/pgfilter.default.json', null)
 	.option('-x, --splitter-readhw <splitteReadhw>', 'ReadableHighWaterMark for the Splitter Transform stream. Default to 65536~64KB', parseInt, null)
 	.option('-y, --splitter-writehw <splitteWritehw>', 'WritableHighWaterMark for the Splitter Transform stream. Default to 16384~15KB', parseInt, null)
