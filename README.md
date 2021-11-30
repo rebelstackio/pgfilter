@@ -1,19 +1,14 @@
 # pgfilter
 
-CLI command to transform,anonymize or filter rows during a Postgres Backup Restore process, transforming stdin data comming from a aackup and pipe it to a stdout.
+CLI to transform or filter rows during a Postgres Backup Restore process, transforming or filtering stdin data comming from a backup and pipe it to a stdout. It use a JSON configuration file to match columns names and transform or filter the values based on builtin functions.
 
 ## Pre-conditions
 
-- Backups must be on custom format to allow tranform them to plain text format with [pg_restore](https://www.postgresql.org/docs/14/app-pgrestore.html)
-
-	```sh
-	# Generate a dump with custom format
-	pg_dump -v -i -p ${PGPORT} -U postgres  $OPTIONS -F c -O -C ${PGDATABASE}
-	```
+- Backups must be on plain format before processing. You can use tools like pg_restore](https://www.postgresql.org/docs/14/app-pgrestore.html) to transform custom backups before apply this CLI.
 
 ## Common Usage
 
-- Restore a backup and anonymize on the fly
+- Restore a backup and anonymize some data
 
 	```sh
 	pg_restore -f db.backup --clean --if-exists --no-publications --no-subscriptions --no-comments |
@@ -21,11 +16,11 @@ CLI command to transform,anonymize or filter rows during a Postgres Backup Resto
 	psql -p "$PG_DEST_PORT" --dbname="$PG_DEST_DB"
 	```
 
-- Pipe it and extend the restore process reducing the steps
+- Restore backups from Storage service like S3, avoiding more manual steps
 
 	```sh
 	aws s3 cp s3://mybucket/mybackup.enc - |
-	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" |
+	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Always encrypt your backups
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
 	pgfilter -f mypgfilter_custom_file.json |
 	psql -p "$PG_DEST_PORT" --dbname="$PG_DEST_DB"
@@ -33,7 +28,7 @@ CLI command to transform,anonymize or filter rows during a Postgres Backup Resto
 
 ## Options
 
-- `-f, --filter-file <value>`          Filter/Transformation file.
+- `-f, --pgfilter-file <value>`        Filter/Transformation file. **REQUIRED**
 
 - `-x, --splitter-readhw <number>`     ReadableHighWaterMark for the Splitter Transform stream. (default to 65536~64KB)
 
@@ -53,7 +48,7 @@ CLI command to transform,anonymize or filter rows during a Postgres Backup Resto
 
 - `-h, --help`                         display help for command
 
-## pgfilter.default.json
+## pgfilter-file
 
 TODO:
 ## Filtering/Transformation functions and factors
@@ -105,9 +100,9 @@ For 60 days from now
 
 Use `--max-buffer-length` and `--skip-overflow` to avoid hang up the parsing process on rows with bytea columns or texts columns with multiple spaces and new lines characters. These columns are hard to parse because its nature and to avoid a really slow process `pgfilter` can ignore the whole line if it exceeds `--max-buffer-length` and to avoid stop the process the flag `--skip-overflow` should be enabled. Check [split2 npm package](https://www.npmjs.com/package/split2) to read more about this behavior.
 
-## Increase Heap size
+<!-- ## Increase Heap size
 Update the variable **MAX_MEMORY** in the file `/etc/pgfilter/.env`. By default this value is **8192(8Gb)**
 
 ```sh
 export MAX_MEMORY=10240
-```
+``` -->
