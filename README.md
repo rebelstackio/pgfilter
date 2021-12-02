@@ -5,7 +5,7 @@ CLI to transform or filter rows during a restore process for Postgres databases.
 1) Parse the incoming data coming from a backup file ( or stdin)
 2) Analyze line patterns
 3) Match tables and columns name againts a configuration file(`--pgfilter-file`)
-4) Apply [transformation/filtering functions](#Transformation/Filtering-builtin-functions).
+4) Apply [transformation/filtering functions](#transformationfiltering-builtin-functions).
 5) Return the transformed data ( or ignore ) to the stream
 ## Pre-conditions
 
@@ -26,7 +26,7 @@ Options:
 
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to transform or filter. Keys represent table names and the subdocument represent the target columns, each column must have a [transformation/filtering function](#Transformation/Filtering-builtin-functions) as value.
+A JSON file that you must define based on the tables and rows that you want to transform or filter. Keys represent table names and the subdocument represent the target columns, each column must have a [transformation/filtering function](#transformationfiltering-builtin-functions) as value.
 
 ```json
 {
