@@ -1,36 +1,32 @@
 # pgfilter
 
-CLI to transform or filter rows during restore process for Postgres databases, transforming or filtering stdin data comming from a backup and pipe it to a stdout. It use a JSON configuration file that match tables and columns name and set builtin transformation/filtering functions for each column.
+CLI to transform or filter rows during a restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
 
+1) Parse the incoming data coming from a backup file ( or stdin)
+2) Analyze line patterns
+3) Match tables and columns name againts a configuration file(`--pgfilter-file`)
+4) Apply [transformation/filtering functions](#Transformation/Filtering-builtin-functions).
+5) Return the transformed data ( or ignore ) to the stream
 ## Pre-conditions
 
-- Backups must be on plain format before processing. You can use tools like pg_restore](https://www.postgresql.org/docs/14/app-pgrestore.html) to transform custom backups before apply this CLI.
+- Backups must be on plain format before processing. You need to decrypt or transform the backup file before use this tool.
+### Usage
 
-## Options
+```bash
+pgfilter [backup_file]
 
-- `-f, --pgfilter-file <value>`        Filter/Transformation file. **REQUIRED**
-
-- `-x, --splitter-readhw <number>`     ReadableHighWaterMark for the Splitter Transform stream. (default to 65536~64KB)
-
-- `-y, --splitter-writehw <number>`    WritableHighWaterMark for the Splitter Transform stream. (default to 16384~15KB)
-
-- `-w, --transformation-readhw <number>`   ReadableHighWaterMark for the Transformation stream. (default to 65536~64KB)
-
-- `-z, --transformation-writehw <number>`  WritableHighWaterMark for the Transformation stream. (default to 16384~15KB)
-
-- `-l, --max-buffer-length <number>`   When the internal buffer size exceeds `--max-buffer-length`, the stream emits an error by default. You may also set `--skip-overflow` to true to suppress the error and instead skip past any lines that cause the internal buffer to exceed maxLength (default to `undefined`)
-
-- `-s, --skip-overflow`                  Avoid stop the streaming if the buffer exceeds. Basically ignore the line with problems. (default to `false`)
-
-- `-d, --debug`                        Display warning messages with more details on stderr. (default: false)
-
-- `-V, --version`                      output the version number
-
-- `-h, --help`                         display help for command
+Options:
+  -f|--pgfilter-file      Path to the transformation/filtering JSON file. Required                          <string>
+  -l|--max-buffer-length                                                                                    [integer]
+  -s|--skip-overflow                                                                                        [boolean]
+  -d|--debug              Show debug messages in stderr                                                     [boolean]
+  -V|--version            Show version number                                                               [boolean]
+  -h|--help               Show help                                                                         [boolean]
+```
 
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to transform or filter. Keys represent table names and the subdocument represent the target columns, each column must have a transformation/filtering function as value.
+A JSON file that you must define based on the tables and rows that you want to transform or filter. Keys represent table names and the subdocument represent the target columns, each column must have a [transformation/filtering function](#Transformation/Filtering-builtin-functions) as value.
 
 ```json
 {
@@ -47,19 +43,19 @@ For example, lets say we have the following database
 
 ```sql
 CREATE TABLE public.users (
-    id         SERIAL,
-    name       VARCHAR(40),
-    lastname   VARCHAR(40),
-    addr1      TEXT
-    addr2      TEXT
-    email      VARCHAR(40),
-    phone      VARCHAR(25),
+		id         SERIAL,
+		name       VARCHAR(40),
+		lastname   VARCHAR(40),
+		addr1      TEXT
+		addr2      TEXT
+		email      VARCHAR(40),
+		phone      VARCHAR(25),
 );
 
 CREATE TABLE public.requests (
-    id         SERIAL,
+		id         SERIAL,
 		user_id    BIGINT,
-    created    TIMESTAMP WITH TIMEZONE
+		created    TIMESTAMP WITH TIMEZONE
 );
 ```
 
@@ -81,11 +77,9 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 ```
 
 ```sh
-cat mybackup.dump |
-pgfilter -f myconfig.json > mybackup.anon.dump
+pgfilter -f myconfig.json mybackup.dump > mybackup.anon.dump
 ```
-
-### Filtering/Transformation builtin functions
+### Transformation/Filtering builtin functions
 
 #### Transformation
 
@@ -121,32 +115,24 @@ For 60 days from now
 ```
 ## Common Usage
 
-- Restore a backup and anonymize some data
+- Restore a backup and anonymize data
 
 	```sh
-	pg_restore -f db.backup --clean --if-exists --no-publications --no-subscriptions --no-comments |
-	pgfilter -f mypgfilter_custom_file.json |
-	psql -p "$PG_DEST_PORT" --dbname="$PG_DEST_DB"
+	pgfilter -f mypgfilter_custom_file.json mybackup.dump |
+	psql -p "$PGPORT" --dbname="$PGDB"
 	```
 
-- Restore backups from Storage service like S3, avoiding more manual steps
+- Restore backups from Storage service like S3, avoiding file downloands
 
 	```sh
 	aws s3 cp s3://mybucket/mybackup.enc - |
 	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Always encrypt your backups
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
 	pgfilter -f mypgfilter_custom_file.json |
-	psql -p "$PG_DEST_PORT" --dbname="$PG_DEST_DB"
+	psql -p "$PGPORT" --dbname="$PGDB"
 	```
 
 ## Considerations
-### Binary/Text Data
+### Bytea/Text Columns
 
-Use `--max-buffer-length` and `--skip-overflow` to avoid hang up the parsing process on rows with bytea columns or texts columns with multiple spaces and new lines characters. These columns are hard to parse because its nature and to avoid a really slow process `pgfilter` can ignore the whole line if it exceeds `--max-buffer-length` and to avoid stop the process the flag `--skip-overflow` should be enabled. Check [split2 npm package](https://www.npmjs.com/package/split2) to read more about this behavior.
-
-### Increase Heap size for Node
-Update the variable **MAX_MEMORY** in the file `/etc/pgfilter/.env`. By default this value is **8192(8Gb)**
-
-```sh
-export MAX_MEMORY=10240
-```
+Use `--max-buffer-length` and `--skip-overflow` to avoid hang up the parsing process on reaaly long rows with bytea or texts columns with multiple spaces and new lines characters. These columns are hard to parse because its nature and to avoid a really slow process `pgfilter` can ignore the whole line if it exceeds `--max-buffer-length` and to avoid stop the process the flag `--skip-overflow` should be enabled. Check [split2 npm package](https://www.npmjs.com/package/split2) to read more about this behavior.
