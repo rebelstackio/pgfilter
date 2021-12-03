@@ -28,9 +28,8 @@
 	],
 	"license": "ISC",
 	"dependencies": {
-		"commander": "8.1.0",
-		"csv-parse": "4.16.3",
-		"split2": "3.2.2"
+		"commander": "8.3.0",
+		"split2": "4.1.0"
 	},
 	"devDependencies": {
 		"eslint": "^7.32.0",
