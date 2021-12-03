@@ -1,40 +1,44 @@
 # pgfilter
 
-CLI to transform or filter rows during a restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
+CLI to filter or transform rows during a restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
 
-1) Parse the incoming data coming from a backup file ( or stdin)
-2) Analyze line patterns
+1) Parse the incoming data coming from a backup file ( or stdin).
+2) Analyze line patterns. Plain text backups contains `COPY` statements with tabs(`\t`) as separator.
 3) Match tables and columns name againts a configuration file(`--pgfilter-file`)
-4) Apply [transformation/filtering functions](#transformationfiltering-builtin-functions).
+4) Apply [filtering/transformation functions](#filteringtransformation-builtin-functions).
 5) Return the transformed data ( or ignore ) to the stream
 ## Pre-conditions
 
-- Backups must be on plain format before processing. You need to decrypt or transform the backup file before use this tool.
+- Backups must be on plain format before processing.
 ### Usage
 
-```bash
+```
 pgfilter [backup_file]
 
 Options:
-  -f|--pgfilter-file      Path to the transformation/filtering JSON file. Required                          <string>
-  -l|--max-buffer-length                                                                                    [integer]
-  -s|--skip-overflow                                                                                        [boolean]
+  -f|--pgfilter-file      Path to the filtering/transformation JSON file. Required                          <string>
+  -l|--max-buffer-length  Set internal buffer size. There is no limit by default. If set, process will      [integer]
+                          throw an error as soon the buffer exceed the limit. Use --skip-overflow to avoid
+                          exit the whole process.
+  -s|--skip-overflow      If set, the line that exceed the internal buffer will be ignored and the process  [boolean]
+                          will not exit
   -d|--debug              Show debug messages in stderr                                                     [boolean]
   -V|--version            Show version number                                                               [boolean]
   -h|--help               Show help                                                                         [boolean]
 ```
 
+__NOTE__ For more information about `--max-buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to transform or filter. Keys represent table names and the subdocument represent the target columns, each column must have a [transformation/filtering function](#transformationfiltering-builtin-functions) as value.
+A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns, each column must have a [filtering/transformation function](#filteringtransformationf-builtin-functions) as value.
 
 ```json
 {
-	<table_name1> : {
-		<column_name>: <func>
+	"<table_name1>" : {
+		"<column_name>": "<function_name>"
 	},
-	<table_name2> : {
-		<column_name>: <func>
+	"<table_name2>" : {
+		"<column_name>": "<function_name>"
 	}
 }
 ```
@@ -79,8 +83,20 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 ```sh
 pgfilter -f myconfig.json mybackup.dump > mybackup.anon.dump
 ```
-### Transformation/Filtering builtin functions
+### Filtering/Transformation builtin functions
 
+#### Filtering
+
+- `fnow`: ISO8601DUR representation. Apply to timestamp columns. Columns that do not match the duration will not be ignored
+
+For 60 days from now
+```json
+{
+	"public.requests" : {
+		"created": "fnow-P60D" // 60 days of duration on the column
+	}
+}
+```
 #### Transformation
 
 - `find`: Firstname + Lastname
@@ -96,35 +112,20 @@ pgfilter -f myconfig.json mybackup.dump > mybackup.anon.dump
 - `zlen`: Empty String
 - `zlar`: Empty Array
 - `null`: Null
-- `fnow`: Filter by date
-
 
 __NOTE__ `digi` allow to set the number of digits. Use the format: `digi-<digits>`. So `digi-8` will generate a number with 8 digits.
-
-#### Filtering
-
-- `fnow`: ISO8601DUR representation. Columns does not match the duration will not be ignored
-
-For 60 days from now
-```json
-{
-	"public.requests" : {
-		"created": "fnow-P60D" // 60 days of duration on the column
-	}
-}
-```
 ## Common Usage
 
 - Restore a backup and anonymize data
 
-	```sh
+	```bash
 	pgfilter -f mypgfilter_custom_file.json mybackup.dump |
 	psql -p "$PGPORT" --dbname="$PGDB"
 	```
 
 - Restore backups from Storage service like S3, avoiding file downloands
 
-	```sh
+	```bash
 	aws s3 cp s3://mybucket/mybackup.enc - |
 	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Always encrypt your backups
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
@@ -133,6 +134,6 @@ For 60 days from now
 	```
 
 ## Considerations
-### Bytea/Text Columns
 
-Use `--max-buffer-length` and `--skip-overflow` to avoid hang up the parsing process on reaaly long rows with bytea or texts columns with multiple spaces and new lines characters. These columns are hard to parse because its nature and to avoid a really slow process `pgfilter` can ignore the whole line if it exceeds `--max-buffer-length` and to avoid stop the process the flag `--skip-overflow` should be enabled. Check [split2 npm package](https://www.npmjs.com/package/split2) to read more about this behavior.
+`pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--max-buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+
