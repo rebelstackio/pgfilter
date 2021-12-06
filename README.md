@@ -1,11 +1,11 @@
 # pgfilter
 
-CLI to filter or transform rows during a restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
+CLI to filter or transform rows during restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
 
 1) Parse the incoming data coming from a backup file ( or stdin).
 2) Analyze line patterns. Plain text backups contains `COPY` statements with tabs(`\t`) as separator.
 3) Match tables and columns name againts a configuration file(`--pgfilter-file`)
-4) Apply [filtering/transformation functions](#filteringtransformation-builtin-functions).
+4) Apply [filtering/transformation functions](./docs/Functions.md).
 5) Return the transformed data ( or ignore ) to the stream
 ## Pre-conditions
 
@@ -30,15 +30,17 @@ Options:
 __NOTE__ For more information about `--max-buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns, each column must have a [filtering/transformation function](#filteringtransformationf-builtin-functions) as value.
+A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns, each column must have a [filtering/transformation function](./docs/Functions.md) as value.
 
 ```json
 {
 	"<table_name1>" : {
-		"<column_name>": "<function_name>"
+		"<column1_name>": "<function_name>",
+		"<column2_name>": "<function_name>",
+		"<column3_name>": "<function_name>"
 	},
 	"<table_name2>" : {
-		"<column_name>": "<function_name>"
+		"<column1_name>": "<function_name>"
 	}
 }
 ```
@@ -69,7 +71,7 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 // myconfig.json
 {
 	"public.users" : { // Table users
-		"name"    : "fnam", // Apply function fnmae to column name
+		"name"    : "fnam", // Apply function fnam to column name
 		"lastname": "lname", // Apply function lname to column lastname
 		"addr1"   : "addr", // Apply function addr to column addr1
 		"email"   : "emai" // Apply function emai to column email
@@ -83,37 +85,9 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 ```sh
 pgfilter -f myconfig.json mybackup.dump > mybackup.anon.dump
 ```
-### Filtering/Transformation builtin functions
+## Filtering/Transformation builtin functions
 
-#### Filtering
-
-- `fnow`: ISO8601DUR representation. Apply to timestamp columns. Columns that do not match the duration will not be ignored
-
-For 60 days from now
-```json
-{
-	"public.requests" : {
-		"created": "fnow-P60D" // 60 days of duration on the column
-	}
-}
-```
-#### Transformation
-
-- `find`: Firstname + Lastname
-- `fnam`: Firstname
-- `lnam`: Lastname
-- `addr`: Address
-- `phon`: Phonenumber
-- `comp`: Company
-- `emai`: Email
-- `wsit`: Web Site
-- `bday`: Birthday
-- `digi`: Digits.
-- `zlen`: Empty String
-- `zlar`: Empty Array
-- `null`: Null
-
-__NOTE__ `digi` allow to set the number of digits. Use the format: `digi-<digits>`. So `digi-8` will generate a number with 8 digits.
+Go to section [Filtering/Transformation bºuiltin functions](./docs/Functions.md) for more information.
 ## Common Usage
 
 - Restore a backup and anonymize data
@@ -127,7 +101,7 @@ __NOTE__ `digi` allow to set the number of digits. Use the format: `digi-<digits
 
 	```bash
 	aws s3 cp s3://mybucket/mybackup.enc - |
-	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Always encrypt your backups
+	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
 	pgfilter -f mypgfilter_custom_file.json |
 	psql -p "$PGPORT" --dbname="$PGDB"
@@ -135,5 +109,7 @@ __NOTE__ `digi` allow to set the number of digits. Use the format: `digi-<digits
 
 ## Considerations
 
-`pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--max-buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+* `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--max-buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+
+* Your databases must be corrected normalized to mantain relation between tables once pgfilter is used to transform data.
 
