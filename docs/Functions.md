@@ -1,31 +1,54 @@
 # Filtering/Transformation builtin functions
 
-## Filtering
+Functions are represented as the following string:
 
-- `fnow`: ISO8601DUR representation. Apply to timestamp columns. Columns that do not match the duration will not be ignored
+```
+<source>.<namespace>.<func_name>-<arg1>-<arg2>
+```
+
+- On some functions, arguments are required.
+
+- sources: Function origin. Could be `pgfilter`, `faker`
+
+- namespace: Function category
+
+## pgfilter
+
+### Filtering
+#### pgfilter.time.fnow-<dur>
+
+Filter timestamp columns based on a duration.
+
+Column type: `timestamp`
+
+Arguments:
+
+- `dur`: ISO8601DUR representation.
+
+Example:
 
 For 60 days from now
 ```json
 {
 	"public.requests" : {
-		"created": "fnow-P60D" // 60 days of duration on the column
+		"created": "pgfilter.time.fnow-P60D" // 60 days of duration on the column
 	}
 }
 ```
+
+## faker
+
 ## Transformation
 
-- `find`: Firstname + Lastname
-- `fnam`: Firstname
-- `lnam`: Lastname
-- `addr`: Address
-- `phon`: Phonenumber
-- `comp`: Company
-- `emai`: Email
-- `wsit`: Web Site
-- `bday`: Birthday
-- `digi`: Digits.
-- `zlen`: Empty String
-- `zlar`: Empty Array
-- `null`: Null
+All the functions on [faker.js](https://marak.github.io/faker.js/) API are available on pgfilter.
 
-__NOTE__ `digi` allow to set the number of digits. Use the format: `digi-<digits>`. So `digi-8` will generate a number with 8 digits.
+For example:
+
+- `faker.name.firstName`
+- `faker.name.middleName`
+- `faker.company.companyName`
+- `faker.random.number`
+- `faker.internet.password`
+
+
+For more information. CHeck [faker API methods](https://marak.github.io/faker.js/#toc7__anchor)
