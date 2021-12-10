@@ -15,9 +15,7 @@ Functions are represented as a string with the following format:
 ## Sources
 
 ### pgfilter
-
-#### Filtering
-##### pgfilter.time.fnow-\<dur>
+#### pgfilter.time.fnow-\<dur>
 
 Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
 
@@ -37,10 +35,7 @@ Evaluate the column value against the `dur` argument. If column value match the 
 		}
 	}
 	```
-
-#### Transformation
-
-##### pgfilter.default.null
+#### pgfilter.default.null
 
 Replace the current value of the column by `null`
 
@@ -58,8 +53,6 @@ Replace the current value of the column by `null`
 	}
 	```
 ### faker
-
-#### Transformation
 
 All the functions on [faker.js](https://marak.github.io/faker.js/) API are available.
 
