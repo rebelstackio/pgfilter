@@ -1,4 +1,4 @@
-# Filtering/Transformation builtin functions
+# Filtering/Transformation functions
 
 Functions are represented as a string with the following format:
 
@@ -15,6 +15,8 @@ Functions are represented as a string with the following format:
 ## Sources
 
 ### pgfilter
+
+Builtin internal helpfull functions
 #### pgfilter.time.fnow-\<dur>
 
 Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
