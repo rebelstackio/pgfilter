@@ -5,12 +5,12 @@ set +a
 
 NODE_VER=${NODE_VER:-16.x}
 PGVERSION=${PGVERSION:-13}
-PGDATABASE=${PGDATABASE:-pgfilterdb}
+PGDATABASE=${PGDATABASE:-dvdrental}
 PGPORT=${PGPORT:-5432}
 PGCLUSTER=${PGCLUSTER:-main}
 PGUSER=${PGUSER:-dbadmin}
 PGPASSWORD=${PGPASSWORD:-devved}
-DB_DIR=${DB_DIR:-/home/vagrant/pgfilter/vagrant/migrations/}
+DB_BACKUP=${DB_BACKUP:-/home/vagrant/pgfilter/vagrant/sampledb/dvdrental.tar}
 
 mkdir -p /vagrant/tmp/log
 
@@ -76,7 +76,8 @@ echo "host    all             all             all                     md5" >>"$P
 
 echo "Create test database..."
 cat <<EOF | su - postgres -c psql
--- Create extensions:
+-- Delete db first
+DROP DATABASE IF EXISTS $PGDATABASE;
 -- Create the database:
 CREATE DATABASE $PGDATABASE WITH OWNER $PGUSER;
 -- auto explain for analyse all queries and inside functions
@@ -87,19 +88,9 @@ EOF
 
 systemctl restart postgresql@$PGVERSION-$PGCLUSTER
 
-echo "Run migrations..."
+echo "Load sample db..."
 
-for f in $(find -L ${DB_DIR} -name '*.sql' | sort); do
-	file=$f
-	case "$file" in
-	*.sql)
-		echo $0 running $file
-		echo $file >>database.err
-		su - postgres -c "psql --port=$PGPORT --dbname=$PGDATABASE" <"$file" 2>>database.err && echo
-		;;
-	*) echo $0 $file ;;
-	esac
-done
+su - postgres -c "pg_restore -d $PGDATABASE /home/vagrant/pgfilter/vagrant/sampledb.backup.tar >/home/vagrant/pgfilter/vagrant/log/sampledb.log 2>/home/vagrant/pgfilter/vagrant/log/sampledb.err"
 
 echo "Install nodejs..."
 

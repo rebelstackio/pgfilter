@@ -3,11 +3,13 @@ vpass
 credentials/
 hosts
 vagrant/.vagrant
+vagrant/log
 node_modules
 .nyc_output
 coverage
 dist/
 *.log
+*.err
 *.dump
 scripts/clone/
 scripts/log/

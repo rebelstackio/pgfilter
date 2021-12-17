@@ -113,3 +113,6 @@ Go to section [Filtering/Transformation bºuiltin functions](./docs/Functions.md
 
 * Your databases must be corrected normalized to mantain relation between tables once pgfilter is used to transform data.
 
+## Development
+
+Check Vagrant Environment [here](./vagrant/README.md)
