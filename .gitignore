@@ -4,6 +4,7 @@ credentials/
 hosts
 vagrant/.vagrant
 vagrant/log
+vagrant/tmp
 node_modules
 .nyc_output
 coverage
