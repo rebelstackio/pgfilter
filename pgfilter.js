@@ -9,14 +9,10 @@ const PGFILTER_VERSION = require('./package.json').version;
 
 pfgilter
 	.name('pgfilter')
-	.option('-f, --filter-file <filterFile>', 'Filter file . Default to /var/opt/pgfilter/pgfilter.default.json', null)
-	.option('-x, --splitter-readhw <splitteReadhw>', 'ReadableHighWaterMark for the Splitter Transform stream. Default to 65536~64KB', parseInt, null)
-	.option('-y, --splitter-writehw <splitteWritehw>', 'WritableHighWaterMark for the Splitter Transform stream. Default to 16384~15KB', parseInt, null)
-	.option('-w, --anonymizer-readhw <anonymizerReadhw>', 'ReadableHighWaterMark for the Anonymizer Transform stream. Default to 65536~64KB', parseInt, null)
-	.option('-z, --anonymizer-writehw <anonymizerWritehw>', 'WritableHighWaterMark for the Anonymizer Transform stream. Default to 16384~15KB', parseInt, null)
-	.option('-l, --max-buffer-length <maxBufferLength>', 'When the internal buffer size exceeds --max-buffer-length, the stream emits an error by default. You may also set skipOverflow to true to suppress the error and instead skip past any lines that cause the internal buffer to exceed maxLength', parseInt, undefined)
-	.option('-s, --skip-overflow', 'Avoid stop the streaming if the buffer exceeds. Help. Ignore line', false)
-	.option('-d, --debug', 'Display more detail about parsing problems', false)
+	.requiredOption('-f, --pgfilter-file <pgfilterFile>', 'Path to the filtering/transformation JSON file')
+	.option('-l, --max-buffer-length <maxBufferLength>', 'Set internal buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip-overflow to avoid exit the whole process.', parseInt, undefined)
+	.option('-s, --skip-overflow', 'If set, the line that exceed the internal buffer will be ignored and the process will not exit', false)
+	.option('-d, --debug', 'Show debug messages in stderr', false)
 	.arguments('[inputfile]')
 	.version(PGFILTER_VERSION)
 	.usage('[options] [inputfile]')
