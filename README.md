@@ -67,7 +67,7 @@ CREATE TABLE public.requests (
 
 To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on table `users` and filter the table `requests` to mantain only requests in the last 60 days, the pgfilter-file will be the following:
 
-```json
+```javascript
 // myconfig.json
 {
 	"public.users" : { // Table users
