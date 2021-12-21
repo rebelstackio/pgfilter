@@ -3,8 +3,12 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "pgfilter.js",
+	"engines": {
+		"node": ">=16.x",
+		"npm": ">=7.24.2"
+	},
 	"scripts": {
-		"test": "test"
+		"start": "NODE_ENV=development node ./pgfilter.js"
 	},
 	"repository": {
 		"type": "git",
@@ -34,7 +38,7 @@
 	"devDependencies": {
 		"eslint": "^7.32.0",
 		"jest": "^26.6.3",
-		"jest-extended": "^0.11.5",
+		"jest-extended": "^1.2.0",
 		"mockdate": "^3.0.5"
 	},
 	"bugs": {
