@@ -13,18 +13,25 @@ CLI to filter or transform rows during restore process for Postgres databases. T
 ### Usage
 
 ```
-pgfilter [backup_file]
+pgfilter [options] [backup_file]
+
+Positionals:
+  backup_file  Path to the Postgres Backup file. Use STDIN if not present
+                                                                        [string]
 
 Options:
-  -f|--pgfilter-file      Path to the filtering/transformation JSON file. Required                          <string>
-  -l|--max-buffer-length  Set internal buffer size. There is no limit by default. If set, process will      [integer]
-                          throw an error as soon the buffer exceed the limit. Use --skip-overflow to avoid
-                          exit the whole process.
-  -s|--skip-overflow      If set, the line that exceed the internal buffer will be ignored and the process  [boolean]
-                          will not exit
-  -d|--debug              Show debug messages in stderr                                                     [boolean]
-  -V|--version            Show version number                                                               [boolean]
-  -h|--help               Show help                                                                         [boolean]
+      --help               Show help                                   [boolean]
+      --version            Show version number                         [boolean]
+  -f, --pgfilter-file      Path to the filtering/transformation JSON file.
+                                                             [string] [required]
+  -l, --max-buffer-length  Set internal buffer size. There is no limit by
+                           default. If set, process will throw an error as soon
+                           the buffer exceed the limit. Use --skip-overflow to
+                           avoid exit the whole process.                [number]
+  -s, --skip-overflow      If set, the line that exceed the internal buffer will
+                           be ignored and the process will not exit    [boolean]
+  -v, --verbose            Show debug messages in stderr               [boolean]
+
 ```
 
 __NOTE__ For more information about `--max-buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
