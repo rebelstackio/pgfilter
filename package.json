@@ -32,6 +32,7 @@
 	],
 	"license": "ISC",
 	"dependencies": {
+		"chalk": "4.1.2",
 		"commander": "8.3.0",
 		"split2": "4.1.0",
 		"yargs": "17.3.1"

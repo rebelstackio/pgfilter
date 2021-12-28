@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
-const { validJSONFile, validFile } = require('./src/util');
+const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
+
+const { validJSONFile, validFile } = require('./src/util');
+
+const error = chalk.bold.red;
 
 const argv = yargs(hideBin(process.argv))
 	.scriptName('pgfilter')
@@ -44,7 +48,7 @@ const argv = yargs(hideBin(process.argv))
 			]);
 	}).fail((msg, err, yargs) => {
 		// TODO: Handle errors here
-		console.error(msg);
+		console.error(error(msg));
 		console.error(yargs.help());
 		process.exit(1);
 	}).argv;
