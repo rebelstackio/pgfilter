@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+const { validJSONFile, validFile } = require('./src/util');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
@@ -9,16 +11,18 @@ const argv = yargs(hideBin(process.argv))
 			describe: 'Path to the Postgres Backup file.',
 			type: 'string',
 			default: null,
-			defaultDescription: 'null. pgfilter Use STDIN by default'
+			defaultDescription: 'null. pgfilter Use STDIN by default',
+			coerce: validFile
 		}).normalize('backup_file')
 			.env('PGFILTER')
 			.version()
 			.option('f', {
-				alias: 'ffile',
-				describe: 'Path to the filtering/transformation JSON file. env: PGFILTER_FFILE',
+				alias: 'file',
+				describe: 'Path to the filtering/transformation JSON file. env: PGFILTER_FILE',
 				type: 'string',
 				demandOption: true,
-				normalize: true
+				normalize: true,
+				coerce: validJSONFile
 			})
 			.option('b', {
 				alias: 'buffer',
@@ -38,6 +42,11 @@ const argv = yargs(hideBin(process.argv))
 			.example([
 				['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
 			]);
+	}).fail((msg, err, yargs) => {
+		// TODO: Handle errors here
+		console.error(msg);
+		console.error(yargs.help());
+		process.exit(1);
 	}).argv;
 
 console.log('=>', argv);
