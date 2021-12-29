@@ -20,6 +20,7 @@
 		"backup",
 		"cli"
 	],
+	"bin": "./pgfilter.js",
 	"contributors": [
 		{
 			"name": "Rein Petersen",
