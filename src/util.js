@@ -1,8 +1,16 @@
 /* src/util.js */
+
 const fs = require('fs');
 
 const validJSONFile = (file) => {
-	return JSON.parse(fs.readFileSync(file, 'utf-8'));
+	// let parsed;
+	// try {
+	let parsed = JSON.parse(fs.readFileSync(file, 'utf-8'));
+	// } catch (error) {
+
+	// }
+
+	return parsed;
 };
 
 const validFile = (file) => {

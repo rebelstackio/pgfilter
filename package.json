@@ -8,7 +8,9 @@
 		"npm": ">=7.24.2"
 	},
 	"scripts": {
-		"start": "NODE_ENV=development node ./pgfilter.js"
+		"start": "NODE_ENV=development node ./pgfilter.js",
+		"test": "NODE_ENV=testing NODE_PATH=src jest test",
+		"coverage": "NODE_ENV=testing NODE_PATH=src jest test --coverage"
 	},
 	"repository": {
 		"type": "git",
