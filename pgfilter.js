@@ -6,53 +6,53 @@ const { hideBin } = require('yargs/helpers');
 
 const { validJSONFile, validFile } = require('./src/util');
 
-const error = chalk.bold.red;
+const lerror = chalk.bold.red;
 
-const argv = yargs(hideBin(process.argv))
+const pgfilter = yargs(hideBin(process.argv))
 	.scriptName('pgfilter')
+	.env('PGFILTER')
+	.version()
+	.option('f', {
+		alias: 'file',
+		describe: 'Path to the filtering/transformation JSON file. env: PGFILTER_FILE',
+		type: 'string',
+		demandOption: true,
+		normalize: true,
+		coerce: (f) => validJSONFile(f, 'file')
+	})
+	.option('b', {
+		alias: 'buffer',
+		describe: 'Set internal buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER',
+		type: 'number',
+		// coerce: (b) => { if (isNaN(b)) throw new Error('err'); } FIXME: validation
+	})
+	.option('s', {
+		alias: 'skip',
+		describe: 'If set, the line that exceed the internal buffer will be ignored and the process will not exit. env: PGFILTER_SKIP',
+		type: 'boolean'
+	})
+	.option('v', {
+		alias: 'verbose',
+		describe: 'Show debug messages in STDERR',
+		type: 'boolean'
+	})
 	.usage('$0 [backup_file]', 'Filter/Transform rows during restore process for Postgres databases. For more detailed information check: https://github.com/rebelstackio/pgfilter', (yargs) => {
 		yargs.positional('backup_file', {
 			describe: 'Path to the Postgres Backup file.',
 			type: 'string',
 			default: null,
 			defaultDescription: 'null. pgfilter Use STDIN by default',
-			coerce: validFile
-		}).normalize('backup_file')
-			.env('PGFILTER')
-			.version()
-			.option('f', {
-				alias: 'file',
-				describe: 'Path to the filtering/transformation JSON file. env: PGFILTER_FILE',
-				type: 'string',
-				demandOption: true,
-				normalize: true,
-				coerce: validJSONFile
-			})
-			.option('b', {
-				alias: 'buffer',
-				describe: 'Set internal buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER',
-				type: 'number'
-			})
-			.option('s', {
-				alias: 'skip',
-				describe: 'If set, the line that exceed the internal buffer will be ignored and the process will not exit. env: PGFILTER_SKIP',
-				type: 'boolean'
-			})
-			.option('v', {
-				alias: 'verbose',
-				describe: 'Show debug messages in STDERR',
-				type: 'boolean'
-			})
-			.example([
-				['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
-			]);
+			normalize: true,
+			coerce: (b) => validFile(b, 'backup_file')
+		}).example([
+			['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
+		]);
 	}).fail((msg, err, yargs) => {
-		// TODO: Handle errors here
-		console.error(error(msg));
-		console.error(yargs.help());
+		console.error(lerror(msg));
+		console.warn(yargs.help());
 		process.exit(1);
 	}).argv;
 
-console.log('=>', argv);
-console.log('=>', argv.f);
+console.log('=>', pgfilter);
+console.log('=>', pgfilter.f);
 // console.log('=>', argv.backup_file);
