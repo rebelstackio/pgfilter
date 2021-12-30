@@ -67,9 +67,6 @@ describe('utils test suit', () => {
 
 	describe('validFile', () => {
 
-		const fs = require('fs');
-		jest.mock('fs');
-
 		test('validFile must throw an error if the file does not exists', () => {
 			expect(() => {
 				validFile(`/tmp/dump${rn()}.dump`);
