@@ -33,9 +33,9 @@ const validJSONFile = (file, arg) => {
 };
 
 const validFile = (file, arg) => {
-	let stat, err = null;
+	let err = null;
 	try {
-		stat = fs.statSync(file);
+		fs.accessSync(file, fs.constants.R_OK);
 	} catch (error) {
 		err = handleSysErrors(error, arg);
 	}
@@ -44,11 +44,19 @@ const validFile = (file, arg) => {
 		throw err;
 	}
 
-	return stat;
+	return file;
+};
+
+const validBackupFile = (file, arg) => {
+	if (file === null) {
+		return file;
+	}
+
+	return validFile(file, arg);
 };
 
 module.exports = {
 	validJSONFile,
-	validFile,
+	validBackupFile,
 	handleSysErrors
 };

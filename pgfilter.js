@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
-const { validJSONFile, validFile } = require('./src/util');
+const { validJSONFile, validBackupFile } = require('./src/util');
 
 const lerror = chalk.bold.red;
 
@@ -43,7 +43,7 @@ const pgfilter = yargs(hideBin(process.argv))
 			default: null,
 			defaultDescription: 'null. pgfilter Use STDIN by default',
 			normalize: true,
-			coerce: (b) => validFile(b, 'backup_file')
+			coerce: (b) => validBackupFile(b, 'backup_file')
 		}).example([
 			['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
 		]);
