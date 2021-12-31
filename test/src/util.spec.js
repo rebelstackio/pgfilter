@@ -1,6 +1,6 @@
 /* test/src/util.spec.js */
 
-const { validJSONFile, handleSysErrors } = require('../../src/util');
+const { validJSONFile, handleSysErrors, validBackupFile } = require('../../src/util');
 
 const rn = () => Math.random() * 1000
 
@@ -71,6 +71,20 @@ describe('utils test suit', () => {
 			expect(() => {
 				validFile(`/tmp/dump${rn()}.dump`);
 			}).toThrow();
+		});
+
+	});
+
+	describe('validBackupFile', () => {
+
+		test('validBackupFile must throw an error if the file does not exists', async () => {
+			expect(() => {
+				validBackupFile(`/tmp/dump${rn()}.dump`);
+			}).toThrow();
+		});
+
+		test('validBackupFile must not throw an error if the file is null( STDIN ) and return null', async () => {
+			expect(validBackupFile(null)).toBe(null);
 		});
 
 	});
