@@ -1,6 +1,6 @@
 /* test/src/util.spec.js */
 
-const { validJSONFile, handleSysErrors, validBackupFile } = require('../../src/util');
+const { validJSONFile, handleSysErrors, validBackupFile, validBuffer } = require('../../src/util');
 
 const rn = () => Math.random() * 1000
 
@@ -77,14 +77,33 @@ describe('utils test suit', () => {
 
 	describe('validBackupFile', () => {
 
-		test('validBackupFile must throw an error if the file does not exists', async () => {
+		test('validBackupFile must throw an error if the file does not exists', () => {
 			expect(() => {
 				validBackupFile(`/tmp/dump${rn()}.dump`);
 			}).toThrow();
 		});
 
-		test('validBackupFile must not throw an error if the file is null( STDIN ) and return null', async () => {
+		test('validBackupFile must not throw an error if the file is null( STDIN ) and return null', () => {
 			expect(validBackupFile(null)).toBe(null);
+		});
+
+	});
+
+	describe('validBuffer', () => {
+
+		test('validBuffer must throw an error if the buffer is NaN', () => {
+			expect(() => {
+				validBuffer(`NaN`);
+			}).toThrow(TypeError);
+		});
+
+		test('validBuffer must return the buffer if it is valid', () => {
+			expect(validBuffer(30)).toBe(30);
+		});
+
+		test('validBuffer must round the buffer if it is a fractional number', () => {
+			expect(validBuffer(30.1)).toBe(30);
+			expect(validBuffer(30.9)).toBe(31);
 		});
 
 	});

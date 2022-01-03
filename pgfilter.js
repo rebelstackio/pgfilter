@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
-const { validJSONFile, validBackupFile } = require('./src/util');
+const { validJSONFile, validBackupFile, validBuffer } = require('./src/util');
 
 const lerror = chalk.bold.red;
 
@@ -24,12 +24,13 @@ const pgfilter = yargs(hideBin(process.argv))
 		alias: 'buffer',
 		describe: 'Set internal buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER',
 		type: 'number',
-		// coerce: (b) => { if (isNaN(b)) throw new Error('err'); } FIXME: validation
+		coerce: (b) => validBuffer(b, 'buffer')
 	})
 	.option('s', {
 		alias: 'skip',
 		describe: 'If set, the line that exceed the internal buffer will be ignored and the process will not exit. env: PGFILTER_SKIP',
-		type: 'boolean'
+		type: 'boolean',
+		default: false
 	})
 	.option('v', {
 		alias: 'verbose',
@@ -49,6 +50,7 @@ const pgfilter = yargs(hideBin(process.argv))
 		]);
 	}).fail((msg, err, yargs) => {
 		console.error(lerror(msg));
+		console.error('\n');
 		console.warn(yargs.help());
 		process.exit(1);
 	}).argv;

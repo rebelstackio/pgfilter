@@ -55,8 +55,25 @@ const validBackupFile = (file, arg) => {
 	return validFile(file, arg);
 };
 
+const validBuffer = (buffer, arg) => {
+	let err = null;
+	if (isNaN(buffer)) {
+		err = handleSysErrors(
+			new TypeError(`'${arg}' must be a integer`),
+			arg
+		);
+	}
+
+	if (err) {
+		throw err;
+	}
+
+	return Math.round(buffer);
+};
+
 module.exports = {
 	validJSONFile,
 	validBackupFile,
-	handleSysErrors
+	handleSysErrors,
+	validBuffer
 };
