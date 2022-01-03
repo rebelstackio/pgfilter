@@ -21,14 +21,14 @@ const pgfilter = yargs(hideBin(process.argv))
 		coerce: (f) => validJSONFile(f, 'file')
 	})
 	.option('b', {
-		alias: 'buffer',
-		describe: 'Set internal buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER',
+		alias: 'buffer-length',
+		describe: 'Set internal stream transformation buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER_LENGTH',
 		type: 'number',
 		coerce: (b) => validBuffer(b, 'buffer')
 	})
 	.option('s', {
-		alias: 'skip',
-		describe: 'If set, the line that exceed the internal buffer will be ignored and the process will not exit. env: PGFILTER_SKIP',
+		alias: 'skip-overflow',
+		describe: 'If set, the line that exceed the internal buffer will be ignored and the process will not exit. env: PGFILTER_SKIP_OVERFLOW',
 		type: 'boolean',
 		default: false
 	})

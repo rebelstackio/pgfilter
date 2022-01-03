@@ -15,28 +15,35 @@ CLI to filter or transform rows during restore process for Postgres databases. T
 ```
 pgfilter [backup_file]
 
-Filter/Transform rows during restore process for Postgres databases.
+Filter/Transform rows during restore process for Postgres databases. For more
+detailed information check: https://github.com/rebelstackio/pgfilter
 
 Positionals:
   backup_file  Path to the Postgres Backup file.
                          [string] [default: null. pgfilter Use STDIN by default]
 
 Options:
-      --help     Show help                                             [boolean]
-      --version  Show version number                                   [boolean]
-  -f, --ffile    Path to the filtering/transformation JSON file. env:
-                 PGFILTER_FFILE                              [string] [required]
-  -b, --buffer   Set internal buffer size. There is no limit by default. If set,
-                 process will throw an error as soon the buffer exceed the
-                 limit. Use --skip to avoid exit the whole process. env:
-                 PGFILTER_BUFFER                                        [number]
-  -s, --skip     If set, the line that exceed the internal buffer will be
-                 ignored and the process will not exit. env: PGFILTER_SKIP
-                                                                       [boolean]
-  -v, --verbose  Show debug messages in STDERR                         [boolean]
+      --help           Show help                                       [boolean]
+      --version        Show version number                             [boolean]
+  -f, --file           Path to the filtering/transformation JSON file. env:
+                       PGFILTER_FILE                         [string] [required]
+  -b, --buffer-length  Set internal stream transformation buffer size. There is
+                       no limit by default. If set, process will throw an error
+                       as soon the buffer exceed the limit. Use --skip to avoid
+                       exit the whole process. env: PGFILTER_BUFFER_LENGTH
+                                                                        [number]
+  -s, --skip-overflow  If set, the line that exceed the internal buffer will be
+                       ignored and the process will not exit. env:
+                       PGFILTER_SKIP_OVERFLOW         [boolean] [default: false]
+  -v, --verbose        Show debug messages in STDERR                   [boolean]
+
+Examples:
+  pgfilter -f ~/config.json mydb.dump |     Restore an anonymized version of the
+  psql -p "$PGPORT" --dbname=mydb           database
+
 ```
 
-__NOTE__ For more information about `--max-buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
+__NOTE__ For more information about `--buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
 ## pgfilter-file
 
 A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns, each column must have a [filtering/transformation function](./docs/Functions.md) as value.
@@ -118,7 +125,7 @@ Go to section [Filtering/Transformation bºuiltin functions](./docs/Functions.md
 
 ## Considerations
 
-* `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--max-buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+* `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
 
 * Your databases must be corrected normalized to mantain relation between tables once pgfilter is used to transform data.
 
