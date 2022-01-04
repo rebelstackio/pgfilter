@@ -1,6 +1,6 @@
 /* test/src/util.spec.js */
 
-const { validJSONFile, handleSysErrors, validBackupFile, validBuffer } = require('../../src/util');
+const { validJSONFile, handleSysErrors, validBackupFile, validBuffer, comesFromSTDIN } = require('../../src/util');
 
 const rn = () => Math.random() * 1000
 
@@ -106,6 +106,49 @@ describe('utils test suit', () => {
 			expect(validBuffer(30.9)).toBe(31);
 		});
 
+	});
+
+	describe('comesFromSTDIN', () => {
+		test('comesFromSTDIN must return true if the \'backup_file\' property is not present in the yargs parsed object', () => {
+			const yargsCLIOptsParsed = {
+				b: 0,
+				'buffer-length': 0,
+				bufferLength: 0,
+				s: false,
+				'skip-overflow': false,
+				skipOverflow: false,
+			};
+
+			expect(comesFromSTDIN(yargsCLIOptsParsed)).toBe(true);
+		});
+
+		test('comesFromSTDIN must return true if the \'backup_file\' property is null', () => {
+			const yargsCLIOptsParsed = {
+				b: 0,
+				'buffer-length': 0,
+				bufferLength: 0,
+				s: false,
+				'skip-overflow': false,
+				skipOverflow: false,
+				backup_file: null
+			};
+
+			expect(comesFromSTDIN(yargsCLIOptsParsed)).toBe(true);
+		});
+
+		test('comesFromSTDIN must return false if the \'backup_file\' property is as valid file path', () => {
+			const yargsCLIOptsParsed = {
+				b: 0,
+				'buffer-length': 0,
+				bufferLength: 0,
+				s: false,
+				'skip-overflow': false,
+				skipOverflow: false,
+				backup_file: '/backups/my_backup.dump'
+			};
+
+			expect(comesFromSTDIN(yargsCLIOptsParsed)).toBe(false);
+		});
 	});
 });
 
