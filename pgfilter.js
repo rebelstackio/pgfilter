@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
+const init = require('./src/index');
 const { validJSONFile, validBackupFile, validBuffer } = require('./src/util');
 
 const lerror = chalk.bold.red;
@@ -24,6 +25,7 @@ const pgfilter = yargs(hideBin(process.argv))
 		alias: 'buffer-length',
 		describe: 'Set internal stream transformation buffer size. There is no limit by default. If set, process will throw an error as soon the buffer exceed the limit. Use --skip to avoid exit the whole process. env: PGFILTER_BUFFER_LENGTH',
 		type: 'number',
+		default: null,
 		coerce: (b) => validBuffer(b, 'buffer')
 	})
 	.option('s', {
@@ -55,6 +57,4 @@ const pgfilter = yargs(hideBin(process.argv))
 		process.exit(1);
 	}).argv;
 
-console.log('=>', pgfilter);
-console.log('=>', pgfilter.f);
-// console.log('=>', argv.backup_file);
+init(pgfilter);

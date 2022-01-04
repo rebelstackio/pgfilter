@@ -1,16 +1,15 @@
 /* src/index.js */
 'use strict';
 
+const { comesFromSTDIN } = require('./util');
 
-const init = function _init(options, args = []) {
-
-	console.log('===>', options.pgfilterFile);
-	// const filterFile = getFilterFile(options.pgfilterFile);
-	// if (args.length > 0) {
-	// 	initFileRedirection(options, filterFile, args[0]);
-	// } else {
-	// 	initStdinRedirection(options, filterFile);
-	// }
+const init = function _init(pgfilterCLIParseOpts) {
+	console.log('=>', pgfilterCLIParseOpts);
+	if (comesFromSTDIN(pgfilterCLIParseOpts)) {
+		console.log(`stdin`);
+	} else {
+		console.log(`file`);
+	}
 };
 
 
