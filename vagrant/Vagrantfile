@@ -10,7 +10,6 @@ PGPASSWORD = "devved"
 PGDATABASE = "dvdrental"
 PGVERSION = "13"
 NODE_VER = "16.x"
-DB_DIR="/home/vagrant/pg_restore_filter/vagrant/pgscripts/"
 
 
 Vagrant.configure("2") do |config|
