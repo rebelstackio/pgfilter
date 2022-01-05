@@ -1,12 +1,16 @@
 # pgfilter
 
-CLI to filter or transform rows during restore process for Postgres databases. The whole process happens in one stream process and it follows these steps:
+CLI to filter or transform data during restauration process for Postgres databases. Allowing to generate an anonymized and filtered version of your database based on JSON configuration file, protecting your sensitive data and making an skinny version of your database for third party resources involved in your developemnt/QA process.
+
+The whole process happens in one stream process and it follows these steps:
 
 1) Parse the incoming data coming from a backup file ( or stdin).
 2) Analyze line patterns. Plain text backups contains `COPY` statements with tabs(`\t`) as separator.
-3) Match tables and columns name againts a configuration file(`--pgfilter-file`)
-4) Apply [filtering/transformation functions](./docs/Functions.md).
-5) Return the transformed data ( or ignore ) to the stream
+3) Match tables and columns name againts a configuration file(`--pgfilter-file`).
+4) Apply the respective [filtering/transformation functions](./docs/Functions.md).
+5) Return the transformed data ( or filter ) to the stream.
+6) Restore the database with transformed data.
+
 ## Pre-conditions
 
 - Backups must be on plain format before processing.
@@ -36,17 +40,12 @@ Options:
                        ignored and the process will not exit. env:
                        PGFILTER_SKIP_OVERFLOW         [boolean] [default: false]
   -v, --verbose        Show debug messages in STDERR                   [boolean]
-
-Examples:
-  pgfilter -f ~/config.json mydb.dump |     Restore an anonymized version of the
-  psql -p "$PGPORT" --dbname=mydb           database
-
 ```
 
 __NOTE__ For more information about `--buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns, each column must have a [filtering/transformation function](./docs/Functions.md) as value.
+A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns on the table, each column must have a [filtering/transformation function](./docs/Functions.md) as value. The function determine what kind of filtering or transformation will be applied on the column.
 
 ```json
 {
@@ -87,42 +86,40 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 // myconfig.json
 {
 	"public.users" : { // Table users
-		"name"    : "fnam", // Apply function fnam to column name
-		"lastname": "lname", // Apply function lname to column lastname
-		"addr1"   : "addr", // Apply function addr to column addr1
-		"email"   : "emai" // Apply function emai to column email
+		"name"    : "faker.name.firstName", // Apply function firstName to column name
+		"lastname": "faker.name.lastName", // Apply function lastName to column lastname
+		"addr1"   : "faker.address.streetAddress", // Apply function streetAddress to column addr1
+		"email"   : "faker.internet.email" // Apply function email to column email
 	},
 	"public.requests": { // Table requests
-		"created": "fnow-P60D" // Apply function fnow to column created
+		"created": "pgfilter.time.fnow-P60D" // Apply function fnow to column created for filtering rows
 	}
 }
 ```
 
 ```sh
-pgfilter -f myconfig.json mybackup.dump > mybackup.anon.dump
+pgfilter -f myconfig.json mybackup.dump > mybackup.transformed.dump
 ```
 ## Filtering/Transformation builtin functions
 
 Go to section [Filtering/Transformation bºuiltin functions](./docs/Functions.md) for more information.
 ## Common Usage
 
-- Restore a backup and anonymize data
+- Generate an anonymized version of your database based on a backup file
 
 	```bash
 	pgfilter -f mypgfilter_custom_file.json mybackup.dump |
 	psql -p "$PGPORT" --dbname="$PGDB"
 	```
+	- You can also avoid file downloands, using `STDIN` and `pipes`:
 
-- Restore backups from Storage service like S3, avoiding file downloands
-
-	```bash
-	aws s3 cp s3://mybucket/mybackup.enc - |
-	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
-	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
-	pgfilter -f mypgfilter_custom_file.json |
-	psql -p "$PGPORT" --dbname="$PGDB"
-	```
-
+		```bash
+		aws s3 cp s3://mybucket/mybackup.enc - |
+		openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
+		pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
+		pgfilter -f mypgfilter_custom_file.json |
+		psql -p "$PGPORT" --dbname="$PGDB"
+		```
 ## Considerations
 
 * `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.

@@ -14,6 +14,9 @@ Functions are represented as a string with the following format:
 
 ## Sources
 
+- [pgfilter](#pgfilter)
+- [faker](#faker)
+
 ### pgfilter
 
 Builtin internal helpfull functions
