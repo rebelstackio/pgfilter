@@ -1,6 +1,6 @@
 # pgfilter
 
-CLI to filter or transform data during restauration process for Postgres databases. Allowing to generate an anonymized and filtered version of your database based on JSON configuration file, protecting your sensitive data and making an skinny version of your database for third party resources involved in your developemnt/QA process.
+CLI to filter or transform data during the restoration process for Postgres databases. Allowing you to generate an anonymized and filtered version of your database based on a JSON configuration file, protecting your sensitive data, and making a skinny version of your database for third-party resources involved in your development/QA process.
 
 The whole process happens in one stream process and it follows these steps:
 
