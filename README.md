@@ -102,7 +102,7 @@ pgfilter -f myconfig.json mybackup.dump > mybackup.transformed.dump
 ```
 ## Filtering/Transformation builtin functions
 
-Go to section [Filtering/Transformation bºuiltin functions](./docs/Functions.md) for more information.
+Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) for more information.
 ## Common Usage
 
 - Generate an anonymized version of your database based on a backup file
