@@ -72,7 +72,6 @@ const validBuffer = (buffer, arg) => {
 };
 
 const comesFromSTDIN = (yargsParsedOpts, prop = 'backup_file') => {
-
 	if (Object.prototype.hasOwnProperty.call(yargsParsedOpts, prop)) {
 		return yargsParsedOpts[prop] === null;
 	} else {

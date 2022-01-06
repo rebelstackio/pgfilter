@@ -4,11 +4,11 @@ const {
 	isStartOfCopyStatement,
 	isEndOfCopyStatement,
 	splitCopyStatement,
-	hasFilterCategory
+	gverbose
 } = require('../../lib/utils');
 
 
-describe('CopyTransform Utils Functions TestSuit', () => {
+describe('Utils Functions TestSuit', () => {
 
 	describe('isStartOfCopyStatement', () => {
 
@@ -89,20 +89,46 @@ describe('CopyTransform Utils Functions TestSuit', () => {
 		});
 	});
 
-	describe.skip('hasFilterCategory', () => {
+	describe('gverbose', () => {
+		let cnslMock;
 
-		test('hasFilterCategory must return true if the category includes a reference to fnow', () => {
-			expect(hasFilterCategory('fnow-P1Y')).toBe(true);
-			expect(hasFilterCategory('fnow-P30D')).toBe(true);
-			expect(hasFilterCategory('fnow-P1D')).toBe(true);
+		beforeEach(() => {
+			cnslMock = {
+				warn: jest.fn()
+			};
 		});
 
-		test('hasFilterCategory must return false if the category does not include a reference to fnow', () => {
-			expect(hasFilterCategory('phon-4')).toBe(false);
-			expect(hasFilterCategory('zlen')).toBe(false);
-			expect(hasFilterCategory('cuid')).toBe(false);
-			expect(hasFilterCategory('comp-1')).toBe(false);
+		test('gverbose always return a function independently of the verboseMode argument', () => {
+
+			expect(gverbose()).toBeFunction();
 		});
+
+		test('gverbose returned function should avoid call the console object if the verboseMode argument is false', () => {
+
+			let logger = gverbose(false, cnslMock);
+			logger(`This is a logger entry `);
+
+			expect(cnslMock.warn).not.toHaveBeenCalled();
+		});
+
+		test('gverbose returned function should call the warn method from the console object if the verboseMode argument is true', () => {
+
+			let logger = gverbose(true, cnslMock);
+			logger(`This is a logger entry `);
+
+			expect(cnslMock.warn).toHaveBeenCalled();
+		});
+
+		test('gverbose returned function should call the warn method from the console object with the internal label', () => {
+
+			let logger = gverbose(true, cnslMock);
+			let message1 = `This is a logger entry 1`;
+			let message2 = `This is a logger entry 2`;
+			logger(message1, message2);
+
+			expect(cnslMock.warn).toHaveBeenLastCalledWith(`[pgfilter]`, message1, message2);
+		});
+
 	});
 
 });

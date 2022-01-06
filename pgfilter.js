@@ -37,7 +37,8 @@ const pgfilter = yargs(hideBin(process.argv))
 	.option('v', {
 		alias: 'verbose',
 		describe: 'Show debug messages in STDERR',
-		type: 'boolean'
+		type: 'boolean',
+		default: false
 	})
 	.usage('$0 [backup_file]', 'Filter/Transform rows during restore process for Postgres databases. For more detailed information check: https://github.com/rebelstackio/pgfilter', (yargs) => {
 		yargs.positional('backup_file', {
@@ -53,7 +54,7 @@ const pgfilter = yargs(hideBin(process.argv))
 	}).fail((msg, err, yargs) => {
 		console.error(lerror(msg));
 		console.error('\n');
-		console.warn(yargs.help());
+		console.log(yargs.help());
 		process.exit(1);
 	}).argv;
 
