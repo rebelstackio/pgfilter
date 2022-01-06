@@ -105,26 +105,33 @@ pgfilter -f myconfig.json mybackup.dump > mybackup.transformed.dump
 Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) for more information.
 ## Common Usage
 
-- Generate an anonymized version of your database based on a backup file
+- Anonymized a backup file
+
+	```bash
+	pgfilter -f myconfig.json mybackup.dump > mybackup.transformed.dump
+	```
+
+- Create an anonymized version of your database based on a backup
 
 	```bash
 	pgfilter -f mypgfilter_custom_file.json mybackup.dump |
 	psql -p "$PGPORT" --dbname="$PGDB"
 	```
-	- You can also avoid file downloands, using `STDIN` and `pipes`:
 
-		```bash
-		aws s3 cp s3://mybucket/mybackup.enc - |
-		openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
-		pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
-		pgfilter -f mypgfilter_custom_file.json |
-		psql -p "$PGPORT" --dbname="$PGDB"
-		```
+- Restore an anonymized version of your database dirrectly for the archive
+
+	```bash
+	aws s3 cp s3://mybucket/mybackup.enc - |
+	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
+	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
+	pgfilter -f mypgfilter_custom_file.json |
+	psql -p "$PGPORT" --dbname="$PGDB"
+	```
 ## Considerations
 
 * `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
 
-* Your databases must be corrected normalized to mantain relation between tables once pgfilter is used to transform data.
+* Your databases must be corrected normalized to mantain relation between tables.
 
 ## Development
 
