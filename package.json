@@ -35,14 +35,15 @@
 	],
 	"license": "ISC",
 	"dependencies": {
+		"@withshepherd/faker": "5.5.5",
 		"chalk": "4.1.2",
 		"commander": "8.3.0",
 		"split2": "4.1.0",
 		"yargs": "17.3.1"
 	},
 	"devDependencies": {
-		"eslint": "^8.5.0",
-		"jest": "^27.4.5",
+		"eslint": "^8.6.0",
+		"jest": "^27.4.7",
 		"jest-extended": "^1.2.0",
 		"mockdate": "^3.0.5"
 	},
