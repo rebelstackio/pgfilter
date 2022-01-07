@@ -4,7 +4,6 @@ const {
 	isStartOfCopyStatement,
 	isEndOfCopyStatement,
 	splitCopyStatement,
-	gverbose
 } = require('../../lib/utils');
 
 
@@ -87,48 +86,6 @@ describe('Utils Functions TestSuit', () => {
 			expect(result).toBeArrayOfSize(5);
 			expect(result[2]).toBe('(seq)');
 		});
-	});
-
-	describe('gverbose', () => {
-		let cnslMock;
-
-		beforeEach(() => {
-			cnslMock = {
-				warn: jest.fn()
-			};
-		});
-
-		test('gverbose always return a function independently of the verboseMode argument', () => {
-
-			expect(gverbose()).toBeFunction();
-		});
-
-		test('gverbose returned function should avoid call the console object if the verboseMode argument is false', () => {
-
-			let logger = gverbose(false, cnslMock);
-			logger(`This is a logger entry `);
-
-			expect(cnslMock.warn).not.toHaveBeenCalled();
-		});
-
-		test('gverbose returned function should call the warn method from the console object if the verboseMode argument is true', () => {
-
-			let logger = gverbose(true, cnslMock);
-			logger(`This is a logger entry `);
-
-			expect(cnslMock.warn).toHaveBeenCalled();
-		});
-
-		test('gverbose returned function should call the warn method from the console object with the internal label', () => {
-
-			let logger = gverbose(true, cnslMock);
-			let message1 = `This is a logger entry 1`;
-			let message2 = `This is a logger entry 2`;
-			logger(message1, message2);
-
-			expect(cnslMock.warn).toHaveBeenLastCalledWith(`[pgfilter]`, message1, message2);
-		});
-
 	});
 
 });

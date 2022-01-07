@@ -2,11 +2,11 @@
 'use strict';
 
 const { comesFromSTDIN } = require('./util');
-const { gverbose } = require('../lib/utils');
+const glogger = require('../lib/logger');
 
 const init = function _init(pgfilterCLIParseOpts) {
 	// console.log('=>', pgfilterCLIParseOpts);
-	const debug = gverbose(pgfilterCLIParseOpts.verbose);
+	const debug = glogger(pgfilterCLIParseOpts.verbose);
 	debug(`Starting...`);
 	if (comesFromSTDIN(pgfilterCLIParseOpts)) {
 		console.log(`stdin`);
