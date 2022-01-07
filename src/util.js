@@ -71,7 +71,7 @@ const validBuffer = (buffer, arg) => {
 	return Math.round(buffer);
 };
 
-const comesFromSTDIN = (yargsParsedOpts, prop = 'backup_file') => {
+const inputFromSTDIN = (yargsParsedOpts, prop = 'backup_file') => {
 	if (Object.prototype.hasOwnProperty.call(yargsParsedOpts, prop)) {
 		return yargsParsedOpts[prop] === null;
 	} else {
@@ -84,5 +84,5 @@ module.exports = {
 	validBackupFile,
 	handleSysErrors,
 	validBuffer,
-	comesFromSTDIN
+	inputFromSTDIN
 };
