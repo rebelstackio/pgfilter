@@ -93,7 +93,7 @@ Replace the current value of the column by an empty array
 	```
 ### faker
 
-All the functions on [faker.js](https://marak.github.io/faker.js/) API are available.
+All the functions on [faker.js](https://github.com/withshepherd/faker.js) API are available.
 
 For example:
 
@@ -104,4 +104,4 @@ For example:
 - `faker.internet.password`
 
 
-For more information. Check [faker API methods](https://marak.github.io/faker.js/#toc7__anchor)
+For more information. Check [faker API methods](https://github.com/withshepherd/faker.js#api)
