@@ -51,7 +51,7 @@ const pgfilter = yargs(hideBin(process.argv))
 		}).example([
 			['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
 		]);
-	}).fail((msg, err, yargs) => {
+	}).fail((msg, _err, yargs) => {
 		console.error(lerror(msg));
 		console.error('\n');
 		console.log(yargs.help());

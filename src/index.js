@@ -33,9 +33,7 @@ const _file = (analyzer, pgfilterCLIParseOpts, debug) => {
 };
 
 const init = function _init(pgfilterCLIParseOpts) {
-	// console.log('=>', pgfilterCLIParseOpts);
 	const debug = glogger(pgfilterCLIParseOpts.verbose);
-	debug(`Starting...`);
 	if (inputFromSTDIN(pgfilterCLIParseOpts)) {
 		_stdin(null, pgfilterCLIParseOpts, debug);
 	} else {
