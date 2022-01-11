@@ -35,7 +35,7 @@
 	],
 	"license": "ISC",
 	"dependencies": {
-		"@withshepherd/faker": "5.5.5",
+		"@faker-js/faker": "5.5.3",
 		"chalk": "4.1.2",
 		"commander": "8.3.0",
 		"split2": "4.1.0",
