@@ -20,7 +20,7 @@ Functions are represented as a string with the following format:
 ### pgfilter
 
 Builtin internal helpfull functions
-#### pgfilter.time.fnow-\<dur>
+#### pgfilter.filter.fnow-\<dur>
 
 Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
 
@@ -36,7 +36,7 @@ Evaluate the column value against the `dur` argument. If column value match the 
 	```json
 	{
 		"public.requests" : {
-			"created": "pgfilter.time.fnow-P60D" // 60 days of duration on the column
+			"created": "pgfilter.filter.fnow-P60D" // 60 days of duration on the column
 		}
 	}
 	```

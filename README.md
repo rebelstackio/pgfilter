@@ -92,7 +92,7 @@ To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on tabl
 		"email"   : "faker.internet.email" // Apply function email to column email
 	},
 	"public.requests": { // Table requests
-		"created": "pgfilter.time.fnow-P60D" // Apply function fnow to column created for filtering rows
+		"created": "pgfilter.filter.fnow-P60D" // Apply function fnow to column created for filtering rows
 	}
 }
 ```
