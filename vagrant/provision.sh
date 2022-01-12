@@ -10,7 +10,7 @@ PGPORT=${PGPORT:-5432}
 PGCLUSTER=${PGCLUSTER:-main}
 PGUSER=${PGUSER:-dbadmin}
 PGPASSWORD=${PGPASSWORD:-devved}
-DB_SAMPLE_BACKUP_URL=${DB_SAMPLE_BACKUP_URL:-https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip }
+DB_SAMPLE_BACKUP_URL=${DB_SAMPLE_BACKUP_URL:-https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip}
 
 mkdir -p /vagrant/tmp/log
 
@@ -90,11 +90,7 @@ systemctl restart postgresql@$PGVERSION-$PGCLUSTER
 
 echo "Load sample db..."
 
-wget -q -O /tmp/vdrental.zip $DB_SAMPLE_BACKUP_URL
-
-unzip -o /tmp/vdrental.zip -d /tmp/
-
-su - postgres -c "pg_restore -d $PGDATABASE /tmp/dvdrental.tar >/home/vagrant/pgfilter/vagrant/log/sampledb.log 2>/home/vagrant/pgfilter/vagrant/log/sampledb.err"
+su - postgres -c "psql -d $PGDATABASE -f /home/vagrant/pgfilter/vagrant/backup/dvdrental.dump >/home/vagrant/pgfilter/vagrant/log/sampledb.log 2>/home/vagrant/pgfilter/vagrant/log/sampledb.err"
 
 echo "Install nodejs..."
 
