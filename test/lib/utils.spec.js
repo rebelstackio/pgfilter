@@ -4,6 +4,7 @@ const {
 	isStartOfCopyStatement,
 	isEndOfCopyStatement,
 	splitCopyStatement,
+	isAFilterFn
 } = require('../../lib/utils');
 
 
@@ -85,6 +86,30 @@ describe('Utils Functions TestSuit', () => {
 			result = splitCopyStatement('COPY public.mn_note (seq) FROM stdin;');
 			expect(result).toBeArrayOfSize(5);
 			expect(result[2]).toBe('(seq)');
+		});
+	});
+
+	describe('isAFilterFn', () => {
+
+		test('isAFilterFn must return false if the fn label does not follow the standar <source>.<namespace>.<fnname>', () => {
+
+			expect(isAFilterFn('random_srtring')).toBe(false);
+			expect(isAFilterFn('fake.test')).toBe(false);
+		});
+
+		test('isAFilterFn must return false if the fn source is different to pgfilter', () => {
+
+			expect(isAFilterFn('faker.filter.num')).toBe(false);
+		});
+
+		test('isAFilterFn must return false if the fn namespace is different to filter', () => {
+
+			expect(isAFilterFn('pgfilter.random.num')).toBe(false);
+		});
+
+		test('isAFilterFn must return true if the fn namespace is equal filter and the source to pgfilter', () => {
+
+			expect(isAFilterFn('pgfilter.filter.fnow')).toBe(true);
 		});
 	});
 
