@@ -1,3 +1,5 @@
+/* test/lib/analyzer/index.spec.js */
+
 const Analyzer = require('../../../lib/analyzer');
 const { splitCopyStatement } = require('../../../lib/utils');
 
@@ -126,6 +128,23 @@ describe('Analyzer', () => {
 			expect(an.affectedColumns[1]).toBe(2); // address2
 			expect(an.affectedColumns[2]).toBe(6); //phone
 		});
+	});
 
+	describe('check', () => {
+		test('check method must return null if the relation is not mapped in the pgfilter file', () => {
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			const line = `COPY public.random (random_id, random_col1, random_col2) FROM stdin;`;
+			let rel = an.check(line);
+			expect(rel).toBe(null);
+		});
+
+		test('check method must return the table name if the relation is mapped in the pgfilter file', () => {
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			const line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
+			let rel = an.check(line);
+			expect(rel).toBe('public.actor');
+		});
 	});
 });
