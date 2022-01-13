@@ -27,23 +27,13 @@ const PGFILTER_PARSED_FILE = {
 	}
 };
 
-let debug;
+let verboseMode = false;
 
 describe('Analyzer', () => {
 
-	beforeEach(() => {
-		debug = jest.fn();
-	});
-
-	test('Analyzer must call the debug function always at contructuor level', () => {
-		new Analyzer(PGFILTER_PARSED_FILE, debug);
-
-		expect(debug).toHaveBeenCalled();
-	});
-
 	describe('_setMappedRelation', () => {
 		test('_setMappedRelation must set null if the statement from the backup file is not related to importing data(COPY)', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			const line = `SELECT random.function_cal(1, 2, 3)`;
 			an._setMappedRelation(splitCopyStatement(line));
@@ -51,7 +41,7 @@ describe('Analyzer', () => {
 		});
 
 		test('_setMappedRelation must set the relation/table if the table/relation is present in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
 			an._setMappedRelation(splitCopyStatement(line));
@@ -62,7 +52,7 @@ describe('Analyzer', () => {
 		});
 
 		test('_setMappedRelation must set null if the table/relation is not present in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			let line = `COPY public.category (category_id, name, last_update) FROM stdin;`;
 			an._setMappedRelation(splitCopyStatement(line));
@@ -72,7 +62,7 @@ describe('Analyzer', () => {
 
 	describe('_setColumnsFromLine', () => {
 		test('_setColumnsFromLine must set the columns in the variable _columns from the COPY FROM statement line as an array to use the index for fast location', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
 			an._setColumnsFromLine(splitCopyStatement(line));
@@ -106,7 +96,7 @@ describe('Analyzer', () => {
 
 	describe('_setAffectedColumns', () => {
 		test('_setAffectedColumns must set as null if the _columns and _relation are nulls', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 			let line = `CREATE FUNCTION TEST...`;
 			an._setMappedRelation(splitCopyStatement(line));
 			an._setColumnsFromLine(splitCopyStatement(line));
@@ -116,7 +106,7 @@ describe('Analyzer', () => {
 		});
 
 		test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation/filtering', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, debug);
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
 			let tkns = splitCopyStatement(line);
