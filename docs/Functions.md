@@ -40,20 +40,20 @@ Evaluate the column value against the `dur` argument. If column value match the 
 		}
 	}
 	```
-#### pgfilter.default.null
+#### pgfilter.default.nul
 
-Replace the current value of the column by `null`
+Replace the current value of the column by `NULL`
 
 - Column type: `anything`
 
-- Column must accept `null` as a valid value
+- Column must accept `nul` as a valid value
 
 - Example:
 
 	```json
 	{
 		"public.requests" : {
-			"payload": "pgfilter.default.null"
+			"payload": "pgfilter.default.nul"
 		}
 	}
 	```

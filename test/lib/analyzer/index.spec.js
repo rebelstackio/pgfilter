@@ -147,4 +147,18 @@ describe('Analyzer', () => {
 			expect(rel).toBe('public.actor');
 		});
 	});
+
+	describe('_applyFn', () => {
+		test('_applyFn must return the val argument if the function label is not valid', () => {
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			expect(an._applyFn('test.default.name', 'John')).toBe('John')
+		});
+
+		test('_applyFn must change the val argument if the function label is valid', () => {
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			expect(an._applyFn('faker.name.firstName', 'John')).not.toBe('John');
+		});
+	});
 });
