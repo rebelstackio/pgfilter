@@ -93,7 +93,7 @@ Replace the current value of the column by an empty array
 	```
 ### faker
 
-All the functions on [faker.js](https://github.com/withshepherd/faker.js) API are available.
+All the functions on [faker.js](https://github.com/faker-js/faker) API are available.
 
 For example:
 
