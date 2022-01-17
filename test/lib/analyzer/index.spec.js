@@ -171,4 +171,21 @@ describe('Analyzer', () => {
 			expect(res).toHaveProperty('arg3', 3);
 		});
 	});
+
+	describe('_transform', () => {
+		test('_transform must return a differnt line for a mapped relation on the pgfilter file', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			const cline = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;';
+			an.check(cline);
+
+			dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62';
+			rline = an._transform(dline);
+			expect(rline).not.toBe(dline);
+
+			dline = '4	Jennifer	Davis	2013-05-26 14:47:57.62'
+			rline = an._transform(dline);
+			expect(rline).not.toBe(dline);
+		});
+	});
 });
