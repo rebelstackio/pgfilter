@@ -3,7 +3,7 @@
 Functions are represented as a string with the following format:
 
 ```
-<source>.<namespace>.<func_name>-<arg1>-<arg2>
+<source>.<namespace>.<func_name>-<arg1>-<arg2>...
 ```
 
 - Function can accept or require arguments.
@@ -33,7 +33,7 @@ Evaluate the column value against the `dur` argument. If column value match the 
 - Example:
 
 	For 60 days from now
-	```json
+	```javascript
 	{
 		"public.requests" : {
 			"created": "pgfilter.filter.fnow-P60D" // 60 days of duration on the column
