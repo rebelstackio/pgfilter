@@ -160,5 +160,15 @@ describe('Analyzer', () => {
 
 			expect(an._applyFn('faker.name.firstName', 'John')).not.toBe('John');
 		});
+
+		test('_applyFn must call the function with all the arguments involved', () => {
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			let colVal = 'mytest'
+			const res = an._applyFn('pgfilter.filter.ftest-1-2-3', colVal)
+			expect(res).toHaveProperty('val', colVal);
+			expect(res).toHaveProperty('arg1', 1);
+			expect(res).toHaveProperty('arg2', 2);
+			expect(res).toHaveProperty('arg3', 3);
+		});
 	});
 });
