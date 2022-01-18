@@ -1,5 +1,7 @@
 /* test/lib/analyzer/index.spec.js */
 
+const MockDate = require('mockdate');
+
 const Analyzer = require('../../../lib/analyzer');
 const { splitCopyStatement } = require('../../../lib/utils');
 
@@ -219,12 +221,40 @@ describe('Analyzer', () => {
 			an.check(cline);
 
 			dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62';
-			rline = an._transform(dline);
+			rline = an._transform(dline.split('\t'));
 			expect(rline).not.toBe(dline);
 
 			dline = '4	Jennifer	Davis	2013-05-26 14:47:57.62'
-			rline = an._transform(dline);
+			rline = an._transform(dline.split('\t'));
 			expect(rline).not.toBe(dline);
+		});
+	});
+
+	describe('_filter', () => {
+		test('_filter must return true if the filterning function does not match the condition', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
+			an.check(cline);
+
+			MockDate.set('2022-01-18');
+
+			dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62';
+			rline = an._filter(dline.split('\t'));
+			expect(rline).toBe(true);
+		});
+
+		test('_filter must return null line if the filterning function match the condition', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
+			an.check(cline);
+
+			MockDate.set('2022-01-18');
+
+			dline = '1	1	ADD	192.168.1.1	2021-01-17 14:47:57.62';
+			rline = an._filter(dline.split('\t'));
+			expect(rline).toBe(false);
 		});
 	});
 });
