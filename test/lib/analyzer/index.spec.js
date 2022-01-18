@@ -26,6 +26,10 @@ const PGFILTER_PARSED_FILE = {
 	},
 	"public.amount": {
 		"amount": "faker.datatype.number"
+	},
+	"public.history": {
+		"ip": "faker.internet.ip",
+		"cdate": "pgfilter.filter.fnow-P30D"
 	}
 };
 
@@ -97,17 +101,17 @@ describe('Analyzer', () => {
 	});
 
 	describe('_setAffectedColumns', () => {
-		test('_setAffectedColumns must set as null if the _columns and _relation are nulls', () => {
+		test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _columns and _relation are nulls', () => {
 			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 			let line = `CREATE FUNCTION TEST...`;
 			an._setMappedRelation(splitCopyStatement(line));
 			an._setColumnsFromLine(splitCopyStatement(line));
 			an._setAffectedColumns();
 
-			expect(an.affectedTransColnsIdx).toBe(null);
+			expect(an.affectedTransColnsIdx).toBeEmpty();
 		});
 
-		test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation/filtering', () => {
+		test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation', () => {
 			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 
 			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
@@ -119,6 +123,8 @@ describe('Analyzer', () => {
 			expect(an.affectedTransColnsIdx[0]).toBe(1); // first_name
 			expect(an.affectedTransColnsIdx[1]).toBe(2); // last_name
 
+			an.reset(); // Clean up internal metadata
+
 			line = `COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;`;
 			an._setMappedRelation(splitCopyStatement(line));
 			an._setColumnsFromLine(splitCopyStatement(line));
@@ -127,6 +133,39 @@ describe('Analyzer', () => {
 			expect(an.affectedTransColnsIdx[0]).toBe(1); // address
 			expect(an.affectedTransColnsIdx[1]).toBe(2); // address2
 			expect(an.affectedTransColnsIdx[2]).toBe(6); //phone
+		});
+
+		test('_setAffectedColumns must set an array of function labels for transformation with the same size of affectedTransColnsIdx and the respective function to use', () => {
+
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
+			let tkns = splitCopyStatement(line);
+			an._setMappedRelation(tkns);
+			an._setColumnsFromLine(tkns);
+			an._setAffectedColumns();
+			expect(an.affectedTransColnFn).toBeArrayOfSize(2);
+			expect(an.affectedTransColnFn[0]).toBe('faker.name.firstName'); // first_name
+			expect(an.affectedTransColnFn[1]).toBe('faker.name.lastName'); // last_name
+		});
+
+		test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', () => {
+
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+
+			let line = `COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;`;
+			let tkns = splitCopyStatement(line);
+			an._setMappedRelation(tkns);
+			an._setColumnsFromLine(tkns);
+			an._setAffectedColumns();
+			expect(an.affectedFiltrColnsFn).toBeArrayOfSize(1);
+			expect(an.affectedFiltrColnsIdx).toBeArrayOfSize(1);
+			expect(an.affectedFiltrColnsIdx[0]).toBe(4); // cdate
+			expect(an.affectedFiltrColnsFn[0]).toBe('pgfilter.filter.fnow-P30D');
+			expect(an.affectedTransColnsIdx).toBeArrayOfSize(1);
+			expect(an._affectedFiltrColnsFn).toBeArrayOfSize(1);
+			expect(an.affectedTransColnsIdx[0]).toBe(3); // ip
+			expect(an.affectedTransColnFn[0]).toBe('faker.internet.ip');
 		});
 	});
 
