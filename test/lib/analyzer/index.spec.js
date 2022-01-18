@@ -104,7 +104,7 @@ describe('Analyzer', () => {
 			an._setColumnsFromLine(splitCopyStatement(line));
 			an._setAffectedColumns();
 
-			expect(an.affectedColumns).toBe(null);
+			expect(an.affectedTransColnsIdx).toBe(null);
 		});
 
 		test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation/filtering', () => {
@@ -115,18 +115,18 @@ describe('Analyzer', () => {
 			an._setMappedRelation(tkns);
 			an._setColumnsFromLine(tkns);
 			an._setAffectedColumns();
-			expect(an.affectedColumns).toBeArrayOfSize(2);
-			expect(an.affectedColumns[0]).toBe(1); // first_name
-			expect(an.affectedColumns[1]).toBe(2); // last_name
+			expect(an.affectedTransColnsIdx).toBeArrayOfSize(2);
+			expect(an.affectedTransColnsIdx[0]).toBe(1); // first_name
+			expect(an.affectedTransColnsIdx[1]).toBe(2); // last_name
 
 			line = `COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;`;
 			an._setMappedRelation(splitCopyStatement(line));
 			an._setColumnsFromLine(splitCopyStatement(line));
 			an._setAffectedColumns();
-			expect(an.affectedColumns).toBeArrayOfSize(3);
-			expect(an.affectedColumns[0]).toBe(1); // address
-			expect(an.affectedColumns[1]).toBe(2); // address2
-			expect(an.affectedColumns[2]).toBe(6); //phone
+			expect(an.affectedTransColnsIdx).toBeArrayOfSize(3);
+			expect(an.affectedTransColnsIdx[0]).toBe(1); // address
+			expect(an.affectedTransColnsIdx[1]).toBe(2); // address2
+			expect(an.affectedTransColnsIdx[2]).toBe(6); //phone
 		});
 	});
 
