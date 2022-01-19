@@ -57,18 +57,21 @@ const validBackupFile = (file, arg) => {
 
 const validBuffer = (buffer, arg) => {
 	let err = null;
-	if (isNaN(buffer)) {
-		err = handleSysErrors(
-			new TypeError(`'${arg}' must be a integer`),
-			arg
-		);
-	}
+	if (buffer !== undefined) {
+		if (isNaN(buffer)) {
+			err = handleSysErrors(
+				new TypeError(`'${arg}' must be a integer`),
+				arg
+			);
+		}
 
-	if (err) {
-		throw err;
-	}
+		if (err) {
+			throw err;
+		}
 
-	return Math.round(buffer);
+		return Math.round(buffer);
+	}
+	return buffer;
 };
 
 const inputFromSTDIN = (yargsParsedOpts, prop = 'backup_file') => {
