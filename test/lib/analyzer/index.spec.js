@@ -8,7 +8,7 @@ const { splitCopyStatement } = require('../../../lib/utils');
 const PGFILTER_PARSED_FILE = {
 	"public.actor": {
 		"first_name": "faker.name.firstName",
-		"last_name": "faker.name.lastName",
+		"last_name": "faker.name.lastName"
 	},
 	"public.address": {
 		"address": "faker.address.streetName",
@@ -19,7 +19,7 @@ const PGFILTER_PARSED_FILE = {
 		"city": "faker.address.city"
 	},
 	"public.country": {
-		"country": "faker.address.country",
+		"country": "faker.address.country"
 	},
 	"public.customer": {
 		"first_name": "faker.name.firstName",
@@ -231,7 +231,7 @@ describe('Analyzer', () => {
 	});
 
 	describe('_filter', () => {
-		test('_filter must return true if the filterning function does not match the condition', () => {
+		test('_filter must return false if the filterning function does not match the condition', () => {
 			let rline, dline;
 			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
@@ -241,10 +241,10 @@ describe('Analyzer', () => {
 
 			dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62';
 			rline = an._filter(dline.split('\t'));
-			expect(rline).toBe(true);
+			expect(rline).toBe(false);
 		});
 
-		test('_filter must return null line if the filterning function match the condition', () => {
+		test('_filter must return true if the filterning function match the condition and the line should be excluded', () => {
 			let rline, dline;
 			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
 			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
@@ -254,7 +254,49 @@ describe('Analyzer', () => {
 
 			dline = '1	1	ADD	192.168.1.1	2021-01-17 14:47:57.62';
 			rline = an._filter(dline.split('\t'));
-			expect(rline).toBe(false);
+			expect(rline).toBe(true);
+
+			dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62';
+			rline = an._filter(dline.split('\t'));
+			expect(rline).toBe(true);
+		});
+	});
+
+	describe('apply', () => {
+		test('apply must transform the mapped column on the pgfilter file', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
+			an.check(line);
+
+			dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62';
+			rline = an.apply(dline);
+			expect(rline).not.toBe(null);
+			expect(rline).not.toBe(dline);
+		});
+
+		test('apply must filter the mapped column on the pgfilter file', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			let line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
+			an.check(line);
+
+			dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62';
+			rline = an.apply(dline);
+			expect(rline).toBe(null);
+		});
+
+		test('apply must filter & transform the mapped column on the pgfilter file', () => {
+			let rline, dline;
+			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+			let line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
+			an.check(line);
+			MockDate.set('2022-01-18');
+
+			dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62';
+			rline = an.apply(dline);
+			expect(rline).not.toBe(null);
+			expect(rline).not.toBe(dline);
 		});
 	});
 });
