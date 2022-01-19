@@ -6,6 +6,7 @@ const fs = require('fs');
 const { inputFromSTDIN } = require('./util');
 const splitter = require('../lib/splitter');
 const matcher = require('../lib/matcher');
+const Analyzer = require('../lib/analyzer');
 
 const _stdin = (analyzer, pgfilterCLIParseOpts) => {
 	process.stdin.setEncoding('utf8');
@@ -32,10 +33,11 @@ const _file = (analyzer, pgfilterCLIParseOpts) => {
 };
 
 const init = function _init(pgfilterCLIParseOpts) {
+	const analyzer = new Analyzer(pgfilterCLIParseOpts.file, pgfilterCLIParseOpts.verbose);
 	if (inputFromSTDIN(pgfilterCLIParseOpts)) {
-		_stdin(null, pgfilterCLIParseOpts);
+		_stdin(analyzer, pgfilterCLIParseOpts);
 	} else {
-		_file(null, pgfilterCLIParseOpts);
+		_file(analyzer, pgfilterCLIParseOpts);
 	}
 };
 
