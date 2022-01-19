@@ -33,9 +33,20 @@ describe('pgfilter.filter namespace function test suit', () => {
 			}).toThrow(Error);
 		});
 
-		test('fnow must return true on P30D of 2020-11-09T18:41:14.419Z', () => {
+		test('fnow must return false on P30D of 2020-11-09T18:41:14.419Z', () => {
 			const rangeF = 'P30D';
 			const column = '2020-11-09T18:41:14.419Z';
+
+			let result;
+			MockDate.set('2020-11-09');
+			result = fnow(column, rangeF);
+
+			expect(result).toBe(false);
+		});
+
+		test('fnow must return true on P30D of 2010-11-09T18:41:14.419Z', () => {
+			const rangeF = 'P30D';
+			const column = '2010-11-09T18:41:14.419Z';
 
 			let result;
 			MockDate.set('2020-11-09');
@@ -44,18 +55,7 @@ describe('pgfilter.filter namespace function test suit', () => {
 			expect(result).toBe(true);
 		});
 
-		test('fnow must return false on P30D of 2010-11-09T18:41:14.419Z', () => {
-			const rangeF = 'P30D';
-			const column = '2010-11-09T18:41:14.419Z';
-
-			let result;
-			MockDate.set('2020-11-09');
-			result = fnow(column, rangeF);
-
-			expect(result).toBe(false);
-		});
-
-		test('fnow must return false on P2D of 2020-11-05T18:41:14.419Z', () => {
+		test('fnow must return true on P2D of 2020-11-05T18:41:14.419Z', () => {
 			const rangeF = 'P2D';
 			const column = '2020-11-05 14:22:48.672979-06';
 
@@ -63,7 +63,7 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2020-11-09');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(false);
+			expect(result).toBe(true);
 		});
 
 		test('fnow should be exact on the compares', () => {
@@ -74,14 +74,14 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2020-11-08T18:41:14.419Z');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(true);
+			expect(result).toBe(false);
 
 			MockDate.set('2020-11-08T18:42:14.419Z');
 			result = fnow(column, rangeF);
-			expect(result).toBe(false);
+			expect(result).toBe(true);
 		});
 
-		test('fnow must return false on P20D of 2017-11-29T09:45:10.000Z', () => {
+		test('fnow must return true on P20D of 2017-11-29T09:45:10.000Z', () => {
 			const rangeF = 'P20D';
 			let column = '2017-11-29T09:45:10.000Z';
 
@@ -89,7 +89,7 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2020-11-09T20:13:47.949Z');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(false);
+			expect(result).toBe(true);
 		});
 
 		test('fnow must return true on P1Y of 2008-11-29T09:25:20.000Z', () => {
@@ -100,7 +100,7 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2021-01-13T17:12:46.980Z');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(false);
+			expect(result).toBe(true);
 		});
 
 		test('fnow must return false on P1Y of 2020-11-29T09:25:20.000Z', () => {
@@ -111,10 +111,10 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2021-01-13T17:12:46.980Z');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(true);
+			expect(result).toBe(false);
 		});
 
-		test('fnow must return true on P1Y on a recent date', () => {
+		test('fnow must return false on P1Y on a recent date', () => {
 			const rangeF = 'P1Y';
 			let column = '2021-01-01T17:13:46.980Z';
 
@@ -122,7 +122,7 @@ describe('pgfilter.filter namespace function test suit', () => {
 			MockDate.set('2021-01-01T17:12:46.980Z');
 			result = fnow(column, rangeF);
 
-			expect(result).toBe(true);
+			expect(result).toBe(false);
 		});
 	});
 
