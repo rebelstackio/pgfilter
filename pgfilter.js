@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
 const init = require('./src/index');
 const { validJSONFile, validBackupFile, validBuffer } = require('./src/util');
 
-const lerror = chalk.bold.red;
 
 const pgfilter = yargs(hideBin(process.argv))
 	.scriptName('pgfilter')
@@ -51,11 +49,6 @@ const pgfilter = yargs(hideBin(process.argv))
 		}).example([
 			['$0 -f ~/config.json mydb.dump | psql -p "$PGPORT" --dbname=mydb', 'Restore an anonymized version of the database'],
 		]);
-	}).fail((msg, _err, yargs) => {
-		console.error(lerror(msg));
-		console.error('\n');
-		console.log(yargs.help());
-		process.exit(1);
 	}).argv;
 
 init(pgfilter);
