@@ -1,0 +1,28 @@
+{
+	"public.actor": {
+		"first_name": "faker.name.firstName",
+		"last_name": "faker.name.lastName"
+	},
+	"public.address": {
+		"address": "faker.address.streetName",
+		"address2": "faker.address.streetName",
+		"phone": "faker.phone.phoneNumber"
+	},
+	"public.city": {
+		"city": "faker.address.city"
+	},
+	"public.country": {
+		"country": "faker.address.country"
+	},
+	"public.customer": {
+		"first_name": "faker.name.firstName",
+		"last_name": "faker.name.lastName",
+		"email": "faker.internet.exampleEmail"
+	},
+	"public.amount": {
+		"amount": "faker.datatype.number"
+	},
+	"public.payment": {
+		"amount": "faker.finance.amount"
+	}
+}
