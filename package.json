@@ -9,6 +9,7 @@
 	},
 	"scripts": {
 		"start": "NODE_ENV=development node ./pgfilter.js",
+		"debug": "NODE_PATH=. node --inspect-brk=0.0.0.0:9229 ./pgfilter.js",
 		"test": "NODE_ENV=testing NODE_PATH=src jest test",
 		"coverage": "NODE_ENV=testing NODE_PATH=src jest test --coverage"
 	},
