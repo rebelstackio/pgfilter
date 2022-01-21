@@ -1,3 +1,4 @@
+[![CI](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml/badge.svg)](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml)
 # pgfilter
 
 CLI to filter or transform data during the restoration process for Postgres databases. Allowing you to generate an anonymized and filtered version of your database based on a JSON configuration file, protecting your sensitive data, and making a skinny version of your database for third-party resources involved in your development/QA process.
