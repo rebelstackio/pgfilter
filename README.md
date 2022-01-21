@@ -11,6 +11,11 @@ The whole process happens in one stream process and it follows these steps:
 5) Return the transformed data ( or filter ) to the stream.
 6) Restore the database with transformed data.
 
+## Installation
+```
+npm i @rebelstack-io/pgfilter -g
+```
+
 ## Pre-conditions
 
 - Backups must be on plain format before processing.
