@@ -1,17 +1,18 @@
 {
-	"name": "pgfilter",
+	"name": "@rebelstack-io/pgfilter",
 	"version": "1.0.0",
-	"description": "",
+	"description": "CLI to filter or transform data during the restoration process for Postgres databases",
 	"main": "pgfilter.js",
 	"engines": {
-		"node": ">=16.x",
+		"node": ">=12.x",
 		"npm": ">=7.24.2"
 	},
 	"scripts": {
 		"start": "NODE_ENV=development node ./pgfilter.js",
 		"debug": "NODE_PATH=. node --inspect-brk=0.0.0.0:9229 ./pgfilter.js",
 		"test": "NODE_ENV=testing NODE_PATH=src jest test",
-		"coverage": "NODE_ENV=testing NODE_PATH=src jest test --coverage"
+		"coverage": "NODE_ENV=testing NODE_PATH=src jest test --coverage",
+		"deploy": "npm publish --access=public"
 	},
 	"repository": {
 		"type": "git",
@@ -21,18 +22,14 @@
 		"postgres",
 		"filter",
 		"backup",
+		"anonymization",
 		"cli"
 	],
-	"bin": "./pgfilter.js",
+	"bin": {
+		"pgfilter": "pgfilter.js"
+	},
 	"contributors": [
-		{
-			"name": "Rein Petersen",
-			"email": "email@reinpetersen.com"
-		},
-		{
-			"name": "Javier Galarza",
-			"email": "jegj57@gmail.com"
-		}
+		"Rein Petersen <email@reinpetersen.com>"
 	],
 	"license": "ISC",
 	"dependencies": {
@@ -50,5 +47,11 @@
 	"bugs": {
 		"url": "https://github.com/rebelstackio/pgfilter/issues"
 	},
-	"homepage": "https://github.com/rebelstackio/pgfilter#readme"
+	"homepage": "https://github.com/rebelstackio/pgfilter#readme",
+	"directories": {
+		"doc": "docs",
+		"lib": "lib",
+		"test": "test"
+	},
+	"author": "Javier Galarza <jegj57@gmail.com>"
 }
