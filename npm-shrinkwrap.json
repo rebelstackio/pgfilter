@@ -1,13 +1,13 @@
 {
-	"name": "pgfilter",
+	"name": "@rebelstack-io/pgfilter",
 	"version": "1.0.0",
 	"lockfileVersion": 2,
 	"requires": true,
 	"packages": {
 		"": {
-			"name": "pgfilter",
+			"name": "@rebelstack-io/pgfilter",
 			"version": "1.0.0",
-			"license": "ISC",
+			"license": "MIT",
 			"dependencies": {
 				"@faker-js/faker": "5.5.3",
 				"commander": "8.3.0",
@@ -24,7 +24,7 @@
 				"mockdate": "^3.0.5"
 			},
 			"engines": {
-				"node": ">=16.x",
+				"node": ">=12.x",
 				"npm": ">=7.24.2"
 			}
 		},
