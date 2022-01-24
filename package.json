@@ -31,6 +31,12 @@
 	"contributors": [
 		"Rein Petersen <email@reinpetersen.com>"
 	],
+	"release": {
+		"branches": [
+			"main",
+			"next"
+		]
+	},
 	"license": "MIT",
 	"dependencies": {
 		"@faker-js/faker": "5.5.3",
