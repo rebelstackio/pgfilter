@@ -20,29 +20,12 @@ Functions are represented as a string with the following format:
 ### pgfilter
 
 Builtin internal helpfull functions
-#### pgfilter.filter.fnow-\<dur>
 
-Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
+#### default
 
-- Column type: `timestamp`
+##### `pgfilter.default.nul`
 
-- Arguments:
-
-	- `dur`: ISO8601DUR representation.
-
-- Example:
-
-	For 60 days from now
-	```javascript
-	{
-		"public.requests" : {
-			"created": "pgfilter.filter.fnow-P60D" // 60 days of duration on the column
-		}
-	}
-	```
-#### pgfilter.default.nul
-
-Replace the current value of the column by `NULL`
+Replace the current value of the column by `NULL`( Postgres representation `\N`)
 
 - Column type: `anything`
 
@@ -59,7 +42,7 @@ Replace the current value of the column by `NULL`
 	```
 
 
-#### pgfilter.default.zlen
+##### `pgfilter.default.zlen`
 
 Replace the current value of the column by an empty string
 
@@ -76,7 +59,7 @@ Replace the current value of the column by an empty string
 		}
 	}
 	```
-#### pgfilter.default.zlar
+##### `pgfilter.default.zlar`
 
 Replace the current value of the column by an empty array
 
@@ -88,6 +71,28 @@ Replace the current value of the column by an empty array
 	{
 		"public.requests" : {
 			"ips": "pgfilter.default.zlar"
+		}
+	}
+	```
+
+#### filter
+##### `pgfilter.filter.fnow-<dur>`
+
+Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
+
+- Column type: `timestamp`
+
+- Arguments:
+
+	- `dur`: ISO8601DUR representation.
+
+- Example:
+
+	For 60 days from now
+	```javascript
+	{
+		"public.requests" : {
+			"created": "pgfilter.filter.fnow-P60D" // 60 days of duration on the column
 		}
 	}
 	```

@@ -19,7 +19,7 @@ npm i @rebelstack-io/pgfilter -g
 
 ## Pre-conditions
 
-- Backups must be on plain format before processing.
+- Backups must be on plain format.
 ### Usage
 
 ```
@@ -121,17 +121,17 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 
 	```bash
 	pgfilter -f mypgfilter_custom_file.json mybackup.dump |
-	psql -p "$PGPORT" --dbname="$PGDB"
+	psql -p 5432 --dbname=mydb
 	```
 
-- Restore an anonymized version of your database dirrectly for the archive
+- Restore an anonymized version of your database dirrectly from a remote archive
 
 	```bash
 	aws s3 cp s3://mybucket/mybackup.enc - |
-	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup. Always encrypt your backups
+	openssl enc -d -aes-256-cbc -pass pass:"$MY_SECRET_PASS" | # Optional Decrypt backup.
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
 	pgfilter -f mypgfilter_custom_file.json |
-	psql -p "$PGPORT" --dbname="$PGDB"
+	psql -p 5432 --dbname=mydb
 	```
 ## Considerations
 
