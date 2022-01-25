@@ -33,8 +33,7 @@
 	],
 	"release": {
 		"branches": [
-			"main",
-			"next"
+			"main"
 		]
 	},
 	"license": "MIT",
