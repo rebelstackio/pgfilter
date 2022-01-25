@@ -31,11 +31,6 @@
 	"contributors": [
 		"Rein Petersen <email@reinpetersen.com>"
 	],
-	"release": {
-		"branches": [
-			"main"
-		]
-	},
 	"license": "MIT",
 	"dependencies": {
 		"@faker-js/faker": "5.5.3",
@@ -44,10 +39,13 @@
 		"yargs": "17.3.1"
 	},
 	"devDependencies": {
+		"@semantic-release/changelog": "^6.0.1",
+		"@semantic-release/git": "^10.0.1",
 		"eslint": "^8.6.0",
 		"jest": "^27.4.7",
 		"jest-extended": "^1.2.0",
-		"mockdate": "^3.0.5"
+		"mockdate": "^3.0.5",
+		"semantic-release": "^19.0.2"
 	},
 	"publishConfig": {
 		"access": "public"
