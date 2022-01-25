@@ -49,6 +49,9 @@
 		"jest-extended": "^1.2.0",
 		"mockdate": "^3.0.5"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"bugs": {
 		"url": "https://github.com/rebelstackio/pgfilter/issues"
 	},
