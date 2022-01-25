@@ -12,6 +12,11 @@ module.exports = {
 		['@semantic-release/github', {
 			'assets': 'release/*.tgz'
 		}],
-		'@semantic-release/git'
+		[
+			'@semantic-release/git',
+			{
+				'message': 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+			}
+		],
 	],
 };
