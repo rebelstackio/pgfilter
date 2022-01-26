@@ -25,6 +25,13 @@
 		"anonymization",
 		"cli"
 	],
+	"files": [
+		"pgfilter.js",
+		"lib/",
+		"src/",
+		"README.md",
+		"LICENSE"
+	],
 	"bin": {
 		"pgfilter": "pgfilter.js"
 	},
@@ -34,7 +41,6 @@
 	"license": "MIT",
 	"dependencies": {
 		"@faker-js/faker": "5.5.3",
-		"commander": "8.3.0",
 		"split2": "4.1.0",
 		"yargs": "17.3.1"
 	},
