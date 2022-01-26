@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/rebelstackio/pgfilter/compare/v1.1.1...v1.1.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* **build:** Remove useless npm packages and reduce npm package size ([cacf413](https://github.com/rebelstackio/pgfilter/commit/cacf41312a8d465e794dc0bb52421fe32568b594))
+
 ## [1.1.1](https://github.com/rebelstackio/pgfilter/compare/v1.1.0...v1.1.1) (2022-01-25)
 
 
