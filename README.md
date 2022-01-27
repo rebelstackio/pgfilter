@@ -3,13 +3,13 @@
 
 CLI to filter or transform data during the restoration process for Postgres databases. Allowing you to generate an anonymized and filtered version of your database based on a JSON configuration file, protecting your sensitive data, and making a skinny version of your database for third-party resources involved in your development/QA process.
 
-The whole process happens in one stream process and it follows these steps:
+The whole process happens in one stream process, and it follows these steps:
 
-1) Parse the incoming data coming from a backup file ( or stdin).
+1) Parse the incoming data coming from a backup file (or stdin).
 2) Analyze line patterns. Plain text backups contains `COPY` statements with tabs(`\t`) as separator.
-3) Match tables and columns name againts a configuration file(`--pgfilter-file`).
+3) Match tables and columns name against a configuration file(`--pgfilter-file`).
 4) Apply the respective [filtering/transformation functions](./docs/Functions.md).
-5) Return the transformed data ( or filter ) to the stream.
+5) Return the transformed data (or filter) to the stream.
 6) Restore the database with transformed data.
 
 ## Installation
@@ -51,7 +51,7 @@ Options:
 __NOTE__ For more information about `--buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns on the table, each column must have a [filtering/transformation function](./docs/Functions.md) as value. The function determine what kind of filtering or transformation will be applied on the column.
+A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns on the table, each column must have a [filtering/transformation function](./docs/Functions.md) as value. The function determine what kind of filtering or transformation will be applied to the column.
 
 ```json
 {
@@ -86,7 +86,7 @@ CREATE TABLE public.requests (
 );
 ```
 
-To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on table `users` and filter the table `requests` to mantain only requests in the last 60 days, the pgfilter-file will be the following:
+To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on table `users` and filter the table `requests` to keep only requests in the last 60 days, the pgfilter-file will be the following:
 
 ```javascript
 // myconfig.json
@@ -135,9 +135,9 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 	```
 ## Considerations
 
-* `pgfilter` use internal streams buffers to store partial data from the backup. By default there is not limit but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combination of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+* `pgfilter` use internal streams buffers to store partial data from the backup. By default, there is no limit, but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combinations of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
 
-* Your databases must be corrected normalized to mantain relation between tables.
+* Your databases must be normalized to maintain relation between tables.
 
 ## Development
 
