@@ -3,8 +3,8 @@
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
-const init = require('./src/index');
-const { validJSONFile, validBackupFile, validBuffer } = require('./src/util');
+const input = require('./lib/input');
+const { validJSONFile, validBackupFile, validBuffer } = require('./lib/utils');
 
 
 const pgfilter = yargs(hideBin(process.argv))
@@ -51,4 +51,4 @@ const pgfilter = yargs(hideBin(process.argv))
 		]);
 	}).argv;
 
-init(pgfilter);
+input(pgfilter);

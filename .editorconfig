@@ -4,7 +4,7 @@
 ; For more visit http://editorconfig.org.
 root = true
 
-[{src,scripts}/**.{js,jsx,json}]
+[{src,scripts,lib}/**.{js,jsx,json}]
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
