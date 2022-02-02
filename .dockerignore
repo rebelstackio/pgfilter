@@ -1,0 +1,12 @@
+test/
+vagrant/
+node_modules/
+docs/
+coverage/
+.github/
+.editorconfig
+.eslintignore
+.eslintrc.json
+.gitignore
+jest.config.js
+*.log

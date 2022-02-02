@@ -13,8 +13,13 @@ The whole process happens in one stream process, and it follows these steps:
 6) Restore the database with transformed data.
 
 ## Installation
-```
+```bash
 npm i @rebelstack-io/pgfilter -g
+```
+
+### Docker Support
+```bash
+docker build -t pgfilter .
 ```
 
 ## Pre-conditions
@@ -132,6 +137,14 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 	pg_restore -f - --clean --if-exists --no-publications --no-subscriptions --no-comments |
 	pgfilter -f mypgfilter_custom_file.json |
 	psql -p 5432 --dbname=mydb
+	```
+
+- Using Docker
+
+	```bash
+	docker run --rm pgfilter:latest -v -f vagrant/test/dvdrental.default.json  vagrant/backup/dvdrental.dump > test.dump
+	# or
+	cat vagrant/backup/dvdrental.dump | docker run -i --rm pgfilter:latest -v -f vagrant/test/dvdrental.default.json  > test.stdin.dump
 	```
 ## Considerations
 
