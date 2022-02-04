@@ -1,16 +1,8 @@
 [![CI](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml/badge.svg)](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml)
 # pgfilter
 
-CLI to filter or transform data during the restoration process for Postgres databases. Allowing you to generate an anonymized and filtered version of your database based on a JSON configuration file, protecting your sensitive data, and making a skinny version of your database for third-party resources involved in your development/QA process.
-
-The whole process happens in one stream process, and it follows these steps:
-
-1) Parse the incoming data coming from a backup file (or stdin).
-2) Analyze line patterns. Plain text backups contains `COPY` statements with tabs(`\t`) as separator.
-3) Match tables and columns name against a configuration file(`--pgfilter-file`).
-4) Apply the respective [filtering/transformation functions](./docs/Functions.md).
-5) Return the transformed data (or filter) to the stream.
-6) Restore the database with transformed data.
+CLI to filter or transform data during the restoration process for Postgres databases.
+It uses a JSON file to define which tables and columns should be anonymized or filtered with various methods, protecting your sensitive data and making a skinny version of your database for third-party resources involved in your development/QA process.
 
 ## Installation
 ```bash
@@ -139,6 +131,14 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 	psql -p 5432 --dbname=mydb
 	```
 
+- Get an anonymized version of your database
+
+	```bash
+	psql -p 5432 --dbname=mydb |
+	pgfilter -f mypgfilter_custom_file.json |
+	psql -p 5432 --dbname=mydb_transformed
+	```
+
 - Using Docker
 
 	```bash
@@ -151,6 +151,12 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 * `pgfilter` use internal streams buffers to store partial data from the backup. By default, there is no limit, but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combinations of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
 
 * Your databases must be normalized to maintain relation between tables.
+
+<!-- ## Why
+
+There are several competitors but none of them allow you to filter information.
+
+- [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/): Hard to setup (requires a SQL Extension) -->
 
 ## Development
 
