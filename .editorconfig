@@ -12,6 +12,10 @@ insert_final_newline = true
 indent_style = tab
 indent_size = 2
 
+[{vagrant}/**.{yml}]
+indent_style = space
+indent_size = 2
+
 ; Choose between lf or rf on "end_of_line" property
 [*]
 indent_style = tab
