@@ -18,28 +18,28 @@ mkdir -p /vagrant/tmp/log
 HOSTS=/etc/hosts
 
 print_db_usage() {
-  echo "Your environment has been setup:"
-  echo ""
-  echo "  Port: $PGPORT"
-  echo "  Database: $PGDATABASE"
-  echo "  Username: $PGUSER"
-  echo "  Password: $PGPASSWORD"
-  echo ""
-  echo "psql access to app database user via VM:"
-  echo "  vagrant ssh"
-  echo "  sudo su - postgres"
-  echo "  PGUSER=$PGUSER PGPASSWORD=$PGPASSWORD psql -h localhost $PGDATABASE"
-  echo ""
-  echo "Env variable for application development:"
-  echo "  DATABASE_URL=postgresql://$PGUSER:$PGPASSWORD@*:$PGPORT/$PGDATABASE"
-  echo ""
-  echo "Local command to access the database via psql:"
-  echo "  PGUSER=$PGUSER PGPASSWORD=$PGPASSWORD psql -h localhost -p $PGPORT $PGDATABASE"
-  echo ""
-  echo "  Getting into the box (terminal):"
-  echo "  vagrant ssh"
-  echo "  sudo su - postgres"
-  echo ""
+	echo "Your environment has been setup:"
+	echo ""
+	echo "  Port: $PGPORT"
+	echo "  Database: $PGDATABASE"
+	echo "  Username: $PGUSER"
+	echo "  Password: $PGPASSWORD"
+	echo ""
+	echo "psql access to app database user via VM:"
+	echo "  vagrant ssh"
+	echo "  sudo su - postgres"
+	echo "  PGUSER=$PGUSER PGPASSWORD=$PGPASSWORD psql -h localhost $PGDATABASE"
+	echo ""
+	echo "Env variable for application development:"
+	echo "  DATABASE_URL=postgresql://$PGUSER:$PGPASSWORD@*:$PGPORT/$PGDATABASE"
+	echo ""
+	echo "Local command to access the database via psql:"
+	echo "  PGUSER=$PGUSER PGPASSWORD=$PGPASSWORD psql -h localhost -p $PGPORT $PGDATABASE"
+	echo ""
+	echo "  Getting into the box (terminal):"
+	echo "  vagrant ssh"
+	echo "  sudo su - postgres"
+	echo ""
 }
 
 export DEBIAN_FRONTEND=noninteractive
@@ -49,8 +49,8 @@ PROVISIONED_ON=/etc/vm_provision_on_timestamp
 echo "install postgresql..."
 PG_REPO_APT_SOURCE=/etc/apt/sources.list.d/pgdg.list
 if [ ! -f "$PG_REPO_APT_SOURCE" ]; then
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >"$PG_REPO_APT_SOURCE"
-  wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >"$PG_REPO_APT_SOURCE"
+	wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
 fi
 
 apt-get update
@@ -69,7 +69,7 @@ EOF
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 
 if [ ! -z "$PGPORT" ]; then
-  sed -i "/port = /c\port = $PGPORT" "$PG_CONF"
+	sed -i "/port = /c\port = $PGPORT" "$PG_CONF"
 fi
 
 echo "host    all             all             all                     md5" >>"$PG_HBA"
@@ -101,7 +101,7 @@ echo "install node version ${NODE_VER}"
 sudo apt-get install -y nodejs
 
 echo "install competitors"
-pip install pganonymize
+sudo pip install pganonymize
 
 # Tag the provision time:
 date >"$PROVISIONED_ON"
