@@ -139,6 +139,16 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 	psql -p 5432 --dbname=mydb_transformed
 	```
 
+- Get an anonymized version from a remote database
+
+	```bash
+	(
+		pg_dump -U dbadmin -h 1.2.3.4 -p 5433 -d remotedb |
+		pgfilter -f mypgfilter_custom_file.json |
+		psql -p 5432 -d  an_remotedb
+	) 2> restore.err > restore.out
+	```
+
 - Using Docker
 
 	```bash
@@ -152,11 +162,11 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 
 * Your databases must be normalized to maintain relation between tables.
 
-<!-- ## Why
+## Why
 
-There are several competitors but none of them allow you to filter information.
+- There are several competitors ( [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/), [pgantomizer](https://github.com/asgeirrr/pgantomizer),...etc) but we have not found one that let you filter information.
 
-- [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/): Hard to setup (requires a SQL Extension) -->
+- Most of them requires a direct connection to the databases which is very helpful for remote databases but pgfilter's focus is to use the local tooling like `pgdump` or `pg_restore` and use Linux amazing piping features
 
 ## Development
 
