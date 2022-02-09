@@ -1,0 +1,51 @@
+tables:
+ - actor:
+    fields:
+     - first_name:
+        provider:
+         name: faker.first_name
+     - last_name:
+        provider:
+         name: faker.first_name
+ - address:
+    fields:
+     - address:
+        provider:
+         name: faker.address
+     - address2:
+        provider:
+         name: faker.address
+     - phone:
+        provider:
+         name: faker.phone_number
+ - city:
+    fields:
+     - city:
+        provider:
+         name: faker.city
+ - country:
+    fields:
+     - country:
+        provider:
+         name: faker.country
+ - customer:
+    fields:
+     - first_name:
+        provider:
+         name: faker.first_name
+     - last_name:
+        provider:
+         name: faker.first_name
+     - email:
+        provider:
+         name: faker.ascii_safe_email
+ - amount:
+    fields:
+     - amount:
+        provider:
+         name: faker.random_number
+ - payment:
+    fields:
+     - amount:
+        provider:
+         name: faker.random_number
