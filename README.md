@@ -143,9 +143,9 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 
 	```bash
 	(
-		pg_dump -U dbadmin -h 1.2.3.4 -p 5433 -d remotedb |
-		pgfilter -f mypgfilter_custom_file.json |
-		psql -p 5432 -d  an_remotedb
+	 pg_dump -U dbadmin -h 1.2.3.4 -p 5433 -d remotedb |
+	 pgfilter -f mypgfilter_custom_file.json |
+	 psql -p 5432 -d  an_remotedb
 	) 2> restore.err > restore.out
 	```
 
