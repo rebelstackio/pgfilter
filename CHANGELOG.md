@@ -1,3 +1,23 @@
+# [1.2.0](https://github.com/rebelstackio/pgfilter/compare/v1.1.2...v1.2.0) (2022-02-21)
+
+
+### Bug Fixes
+
+* **docs:** Fix typos ([9c13472](https://github.com/rebelstackio/pgfilter/commit/9c134720820f24bfcdf1ab093c8bb269b3706de6))
+* **docs:** Remove tabs from on usage entry ([614689d](https://github.com/rebelstackio/pgfilter/commit/614689dce5402cd5c776d4f8b33b66a25f37082c))
+* **provision:** Fix provision script for vagrant env ([8d2f968](https://github.com/rebelstackio/pgfilter/commit/8d2f968e81b66dfcabe26e284271e3b54d197c40))
+
+
+### Features
+
+* **docker:** Add docker file to allow test the CLI on no-node envs ([5560183](https://github.com/rebelstackio/pgfilter/commit/5560183ea01def413cfa4524233933d506b958cf))
+* **docker:** Add initial dockefile to allow test the CLI on no-node envs ([258e3c7](https://github.com/rebelstackio/pgfilter/commit/258e3c7f4e49ca7ae0dc7066f9916808ccf44907))
+* **docs:** Remove steps section ([a345408](https://github.com/rebelstackio/pgfilter/commit/a345408bf6f8168a2cb0b8265db27cca6702e9b0))
+* **docs:** Update docs ([0d0e0cf](https://github.com/rebelstackio/pgfilter/commit/0d0e0cfd0555f57383f6af04ec3da571fc767e13))
+* **structure:** Remove src folder and move funciton under lib ([00446b9](https://github.com/rebelstackio/pgfilter/commit/00446b99b38ae32457527baa5ebf85e3d4b055c6))
+* **test:**  Create a schema file ([63480e7](https://github.com/rebelstackio/pgfilter/commit/63480e7e3f0df36ef08598bcceaa5aa346541998))
+* **test:** Add pganonymize pip packages for comparison ([9f2d5cd](https://github.com/rebelstackio/pgfilter/commit/9f2d5cd4d89db57289e34731eade56024445f304))
+
 ## [1.1.2](https://github.com/rebelstackio/pgfilter/compare/v1.1.1...v1.1.2) (2022-01-26)
 
 
