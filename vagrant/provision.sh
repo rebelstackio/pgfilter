@@ -55,7 +55,7 @@ fi
 
 apt-get update
 
-sudo apt-get install -y "postgresql-server-dev-$PGVERSION" "postgresql-contrib-$PGVERSION"
+sudo apt-get install -y "python3-pip postgresql-server-dev-$PGVERSION" "postgresql-contrib-$PGVERSION"
 
 echo "configure postgresql..."
 
@@ -99,6 +99,9 @@ curl -sL "https://deb.nodesource.com/setup_$NODE_VER" | sudo -E bash -
 
 echo "install node version ${NODE_VER}"
 sudo apt-get install -y nodejs
+
+echo "install competitors"
+sudo pip install pganonymize
 
 # Tag the provision time:
 date >"$PROVISIONED_ON"
