@@ -1,4 +1,6 @@
 [![CI](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml/badge.svg)](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml)
+[![view on npm](https://img.shields.io/npm/l/@rebelstack-io/pgfilter)](https://www.npmjs.com/package/@rebelstack-io/pgfilter)
+
 # pgfilter
 
 CLI to filter or transform data during the restoration process for Postgres databases.
