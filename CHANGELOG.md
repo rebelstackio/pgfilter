@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/rebelstackio/pgfilter/compare/v1.2.0...v1.2.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* **dependecies:** Remove npm audit warning ([633533d](https://github.com/rebelstackio/pgfilter/commit/633533d02c399ed0c0b29313facdaf498884d04e))
+* **tests:** Fix unit tests ([f35d91e](https://github.com/rebelstackio/pgfilter/commit/f35d91e8596be16ca97cb14d8bf4c1503e7dfed4))
+* **typos:** Rename variable and fix several typos in the docs ([d2ad1a8](https://github.com/rebelstackio/pgfilter/commit/d2ad1a8acd9933e3778c8066952f64b7b7ab1e91))
+
 # [1.2.0](https://github.com/rebelstackio/pgfilter/compare/v1.1.2...v1.2.0) (2022-02-21)
 
 
