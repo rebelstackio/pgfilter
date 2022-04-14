@@ -146,9 +146,9 @@ describe('Analyzer', () => {
 			an._setMappedRelation(tkns);
 			an._setColumnsFromLine(tkns);
 			an._setAffectedColumns();
-			expect(an.affectedTransColnFn).toBeArrayOfSize(2);
-			expect(an.affectedTransColnFn[0]).toBe('faker.name.firstName'); // first_name
-			expect(an.affectedTransColnFn[1]).toBe('faker.name.lastName'); // last_name
+			expect(an.affectedTransColnsFn).toBeArrayOfSize(2);
+			expect(an.affectedTransColnsFn[0]).toBe('faker.name.firstName'); // first_name
+			expect(an.affectedTransColnsFn[1]).toBe('faker.name.lastName'); // last_name
 		});
 
 		test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', () => {
@@ -167,7 +167,7 @@ describe('Analyzer', () => {
 			expect(an.affectedTransColnsIdx).toBeArrayOfSize(1);
 			expect(an._affectedFiltrColnsFn).toBeArrayOfSize(1);
 			expect(an.affectedTransColnsIdx[0]).toBe(3); // ip
-			expect(an.affectedTransColnFn[0]).toBe('faker.internet.ip');
+			expect(an.affectedTransColnsFn[0]).toBe('faker.internet.ip');
 		});
 	});
 
