@@ -1,12 +1,12 @@
 {
 	"name": "@rebelstack-io/pgfilter",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"lockfileVersion": 2,
 	"requires": true,
 	"packages": {
 		"": {
 			"name": "@rebelstack-io/pgfilter",
-			"version": "1.2.1",
+			"version": "1.2.2",
 			"license": "MIT",
 			"dependencies": {
 				"@faker-js/faker": "5.5.3",
