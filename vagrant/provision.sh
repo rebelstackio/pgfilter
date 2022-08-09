@@ -55,7 +55,7 @@ fi
 
 apt-get update
 
-sudo apt-get install -y "python3-pip postgresql-server-dev-$PGVERSION" "postgresql-contrib-$PGVERSION"
+sudo apt-get install -y "python3-pip" "postgresql-server-dev-$PGVERSION" "postgresql-contrib-$PGVERSION"
 
 echo "configure postgresql..."
 
