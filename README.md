@@ -172,4 +172,10 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 
 ## Development
 
+### Vagrant Env
 Check Vagrant Environment [here](./vagrant/README.md)
+
+### Configure hooks
+```sh
+npx husky add .husky/commit-msg 'npx commitlint --edit $1'
+```
