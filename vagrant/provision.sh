@@ -90,7 +90,10 @@ systemctl restart postgresql@$PGVERSION-$PGCLUSTER
 
 echo "Load sample db..."
 
-su - postgres -c "psql -d $PGDATABASE -f /home/vagrant/pgfilter/vagrant/backup/dvdrental.dump >/home/vagrant/pgfilter/vagrant/log/sampledb.log 2>/home/vagrant/pgfilter/vagrant/log/sampledb.err"
+mkdir -p /home/vagrant/pgfilter/vagrant/log/
+usermod -G postgres,vagrant postgres
+
+su - postgres -c "psql -d $PGDATABASE -f /home/vagrant/pgfilter/vagrant/backup/dvdrental.dump > /home/vagrant/pgfilter/vagrant/log/sampledb.log 2>/home/vagrant/pgfilter/vagrant/log/sampledb.err"
 
 echo "Install nodejs..."
 
