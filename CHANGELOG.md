@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/rebelstackio/pgfilter/compare/v1.3.0...v1.3.1) (2022-08-09)
+
+
+### Bug Fixes
+
+* **husky:** fail silently husky installation ([a0df2aa](https://github.com/rebelstackio/pgfilter/commit/a0df2aaf3fd6c6068210f15f8df7f745c303fe88))
+
 # [1.3.0](https://github.com/rebelstackio/pgfilter/compare/v1.2.2...v1.3.0) (2022-08-09)
 
 
