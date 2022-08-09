@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/rebelstackio/pgfilter/compare/v1.2.2...v1.3.0) (2022-08-09)
+
+
+### Bug Fixes
+
+* **ci:** try avoid husky reject the commit from semantic-release ([fc17ded](https://github.com/rebelstackio/pgfilter/commit/fc17ded90fc6c29b59f2854a6a4deb0baf5962e0))
+* **vagrant:** fix test database provision ([44ebc6d](https://github.com/rebelstackio/pgfilter/commit/44ebc6d7bfe46140b4b27c8710e4d84216932b04))
+* **vagrant:** fix vagrant provision script ([250af84](https://github.com/rebelstackio/pgfilter/commit/250af84f80bb0e4a693e35e0b79a8d686639119e))
+
+
+### Features
+
+* **dependecies:** upgrade faker, yargs and eslint and adjust code based on faker breaking changes ([2daab72](https://github.com/rebelstackio/pgfilter/commit/2daab7281736ab575ccf004011da65d0f4bfd448))
+* **lint:** add husky to enforce commit message format ([7b44711](https://github.com/rebelstackio/pgfilter/commit/7b447114181f6fb9928d31b53b1b1f6c3872d0f2))
+
 ## [1.2.2](https://github.com/rebelstackio/pgfilter/compare/v1.2.1...v1.2.2) (2022-06-16)
 
 
