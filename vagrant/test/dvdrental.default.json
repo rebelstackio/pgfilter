@@ -4,9 +4,9 @@
 		"last_name": "faker.name.lastName"
 	},
 	"public.address": {
-		"address": "faker.address.streetName",
-		"address2": "faker.address.streetName",
-		"phone": "faker.phone.phoneNumber"
+		"address": "faker.address.street",
+		"address2": "faker.address.street",
+		"phone": "faker.phone.number"
 	},
 	"public.city": {
 		"city": "faker.address.city"
