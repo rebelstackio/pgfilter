@@ -1,72 +1,84 @@
 {
-	"name": "@rebelstack-io/pgfilter",
-	"version": "1.3.1",
-	"description": "CLI to filter or transform data during the restoration process for Postgres databases",
-	"main": "pgfilter.js",
-	"engines": {
-		"node": ">=12.x",
-		"npm": ">=7.24.2"
-	},
-	"scripts": {
-		"start": "NODE_ENV=development node ./pgfilter.js",
-		"debug": "NODE_PATH=. node --inspect-brk=0.0.0.0:9229 ./pgfilter.js",
-		"test": "NODE_ENV=testing NODE_PATH=lib jest test",
-		"coverage": "NODE_ENV=testing NODE_PATH=lib jest test --coverage",
-		"lint": "eslint .",
-		"prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\""
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/rebelstackio/pgfilter.git"
-	},
-	"keywords": [
-		"postgres",
-		"filter",
-		"backup",
-		"anonymization",
-		"cli"
-	],
-	"files": [
-		"pgfilter.js",
-		"lib/",
-		"README.md",
-		"LICENSE"
-	],
-	"bin": {
-		"pgfilter": "pgfilter.js"
-	},
-	"contributors": [
-		"Rein Petersen <email@reinpetersen.com>"
-	],
-	"license": "MIT",
-	"dependencies": {
-		"@faker-js/faker": "7.4.0",
-		"split2": "4.1.0",
-		"yargs": "17.5.1"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^17.0.3",
-		"@commitlint/config-conventional": "^17.0.3",
-		"@semantic-release/changelog": "^6.0.1",
-		"@semantic-release/git": "^10.0.1",
-		"eslint": "^8.21.0",
-		"husky": "^8.0.1",
-		"jest": "^27.4.7",
-		"jest-extended": "^1.2.0",
-		"mockdate": "^3.0.5",
-		"semantic-release": "^19.0.2"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"bugs": {
-		"url": "https://github.com/rebelstackio/pgfilter/issues"
-	},
-	"homepage": "https://github.com/rebelstackio/pgfilter#readme",
-	"directories": {
-		"doc": "docs",
-		"lib": "lib",
-		"test": "test"
-	},
-	"author": "Javier Galarza <jegj57@gmail.com>"
+  "name": "@rebelstack-io/pgfilter",
+  "version": "1.3.1",
+  "description": "CLI to filter or transform data during the restoration process for Postgres databases",
+  "main": "pgfilter.js",
+  "engines": {
+    "node": ">=12.x",
+    "npm": ">=7.24.2"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development node ./pgfilter.js",
+    "debug": "NODE_PATH=. node --inspect-brk=0.0.0.0:9229 ./pgfilter.js",
+    "coverage": "NODE_ENV=testing NODE_PATH=lib jest test --coverage",
+    "lint": "npm run lint:standard && npm run lint:markdown",
+    "lint:fix": "standard --fix",
+    "lint:markdown": "markdownlint-cli2",
+    "lint:standard": "standard | snazzy",
+    "test": "npm run lint && npm run unit",
+    "test:ci": "npm run unit -- -R terse --cov --coverage-report=lcovonly",
+    "test:report": "npm run lint && npm run unit:report",
+    "test:watch": "npm run unit -- -w --no-coverage-report -R terse",
+    "unit": "tap",
+    "unit:junit": "tap-mocha-reporter xunit < out.tap > test/junit-testresults.xml",
+    "unit:report": "tap --cov --coverage-report=html --coverage-report=cobertura | tee out.tap",
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rebelstackio/pgfilter.git"
+  },
+  "keywords": [
+    "postgres",
+    "filter",
+    "backup",
+    "anonymization",
+    "cli"
+  ],
+  "files": [
+    "pgfilter.js",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "pgfilter": "pgfilter.js"
+  },
+  "contributors": [
+    "Rein Petersen <email@reinpetersen.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@faker-js/faker": "7.4.0",
+    "save": "^2.5.0",
+    "snazzy": "^9.0.0",
+    "split2": "4.1.0",
+    "yargs": "17.5.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "eslint": "^8.21.0",
+    "husky": "^8.0.1",
+    "markdownlint-cli2": "^0.5.0",
+    "mockdate": "^3.0.5",
+    "semantic-release": "^19.0.2",
+    "standard": "^17.0.0",
+    "tap": "^16.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/rebelstackio/pgfilter/issues"
+  },
+  "homepage": "https://github.com/rebelstackio/pgfilter#readme",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "author": "Javier Galarza <jegj57@gmail.com>"
 }

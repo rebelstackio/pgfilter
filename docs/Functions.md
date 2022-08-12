@@ -78,7 +78,10 @@ Replace the current value of the column by an empty array
 #### filter
 ##### `pgfilter.filter.fnow-<dur>`
 
-Evaluate the column value against the `dur` argument. If column value match the duration, the row is allowed to restore. Otherwise, the whole row is ignored and won't be included in the restore.
+Evaluate the column value against the `dur` argument.
+If column value match the duration, the row is allowed
+to restore. Otherwise, the whole row is ignored and
+won't be included in the restore.
 
 - Column type: `timestamp`
 

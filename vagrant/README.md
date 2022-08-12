@@ -13,7 +13,10 @@ Env Details:
 
 ## Sample Database
 
-[dvdrental.dump](./backup/dvdrental.dump) contains a backup for a demo database. You can find the sample database details [here](https://www.postgresqltutorial.com/postgresql-sample-database/). This databases is already restored and ready for use in the vagrant environment.
+[dvdrental.dump](./backup/dvdrental.dump) contains a backup for a demo database.
+You can find the sample database details
+[here](https://www.postgresqltutorial.com/postgresql-sample-database/).
+This databases is already restored and ready for use in the vagrant environment.
 
 ## Testing
 

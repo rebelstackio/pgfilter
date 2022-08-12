@@ -4,7 +4,10 @@
 # pgfilter
 
 CLI to filter or transform data during the restoration process for Postgres databases.
-It uses a JSON file to define which tables and columns should be anonymized or filtered with various methods, protecting your sensitive data and making a skinny version of your database for third-party resources involved in your development/QA process.
+It uses a JSON file to define which tables and columns should be anonymized or
+filtered with various methods, protecting your sensitive data and making a
+skinny version of your database for third-party resources involved in your
+development/QA process.
 
 ## Installation
 ```bash
@@ -47,10 +50,16 @@ Options:
   -v, --verbose        Show debug messages in STDERR                   [boolean]
 ```
 
-__NOTE__ For more information about `--buffer-length` and `--skip-overflow` check [Considerations section](#considerations)
+__NOTE__ For more information about `--buffer-length` and `--skip-overflow`
+check [Considerations section](#considerations)
 ## pgfilter-file
 
-A JSON file that you must define based on the tables and rows that you want to filter or transform. Keys represent table names and the subdocument represent the target columns on the table, each column must have a [filtering/transformation function](./docs/Functions.md) as value. The function determine what kind of filtering or transformation will be applied to the column.
+A JSON file that you must define based on the tables and rows that you want to filter
+or transform.Keys represent table names and the subdocument represent the
+target columns on the table, each column must have
+a [filtering/transformation function](./docs/Functions.md) as value.
+The function determine what kind of filtering or transformation
+will be applied to the column.
 
 ```json
 {
@@ -85,7 +94,9 @@ CREATE TABLE public.requests (
 );
 ```
 
-To transform or anonymize the columns `name`,`lastname`,`addr1`, `email` on table `users` and filter the table `requests` to keep only requests in the last 60 days, the pgfilter-file will be the following:
+To transform or anonymize the columns `name`,`lastname`,`addr1`, `email`
+on table `users` and filter the table `requests` to keep only requests in
+the last 60 days, the pgfilter-file will be the following:
 
 ```javascript
 // myconfig.json
@@ -107,7 +118,8 @@ pgfilter -f myconfig.json mybackup.dump > mybackup.transformed.dump
 ```
 ## Filtering/Transformation builtin functions
 
-Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) for more information.
+Go to section [Filtering/Transformation builtin functions](./docs/Functions.md)
+for more information.
 ## Common Usage
 
 - Anonymized a backup file
@@ -160,15 +172,28 @@ Go to section [Filtering/Transformation builtin functions](./docs/Functions.md) 
 	```
 ## Considerations
 
-* `pgfilter` use internal streams buffers to store partial data from the backup. By default, there is no limit, but you can use  `--skip-overflow` and `--buffer-length` options to set limitations to the internal buffer. This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2) which is used internally to detect lines in the stream for analysis. These combinations of options is useful when there are tables with bytea or really long text columns. This will speed up the process on this scenario but also may cause data lose, **use with caution**.
+* `pgfilter` use internal streams buffers to store partial data from the backup.
+By default, there is no limit, but you can use  `--skip-overflow`
+and `--buffer-length` options to set limitations to the internal buffer.
+This behavior is inherent due to [split2 npm package](https://www.npmjs.com/package/split2)
+which is used internally to detect lines in the stream for analysis.
+These combinations of options is useful when there are tables
+with bytea or really long text columns. This will speed up the process
+on this scenario but also may cause data lose, **use with caution**.
 
 * Your databases must be normalized to maintain relation between tables.
 
 ## Why
 
-- There are several competitors ( [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/), [pgantomizer](https://github.com/asgeirrr/pgantomizer),...etc) but we have not found one that let you filter information.
+- There are several competitors (
+  [PostgreSQL Anonymizer](https://postgresql-anonymizer.readthedocs.io/en/stable/),
+  [pgantomizer](https://github.com/asgeirrr/pgantomizer),...etc
+  ) but we have not found one that let you filter information.
 
-- Most of them requires a direct connection to the databases which is very helpful for remote databases but pgfilter's focus is to use the local tooling like `pgdump` or `pg_restore` and use Linux amazing piping features
+- Most of them requires a direct connection to the databases which is very helpful
+for remote databases but pgfilter's focus is to use the
+local tooling like `pgdump` or `pg_restore` and
+use Linux amazing piping features
 
 ## Development
 
