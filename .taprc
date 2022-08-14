@@ -1,0 +1,9 @@
+ts: false
+jsx: false
+flow: false
+check-coverage: false
+coverage: true
+node-arg: --allow-natives-syntax
+
+files:
+  - 'test/**/*.spec.js'

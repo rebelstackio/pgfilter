@@ -1,129 +1,140 @@
 /* test/lib/fn/pgfilter/default.spec.js */
-'use strict';
+'use strict'
 
-const MockDate = require('mockdate');
+const MockDate = require('mockdate')
+const t = require('tap')
+const test = t.test
 
-const { fnow } = require('../../../../lib/fn/pgfilter/filter');
+const { fnow, ftest } = require('../../../../lib/fn/pgfilter/filter')
 
-describe('pgfilter.filter namespace function test suit', () => {
+test('pgfilter.filter namespace function test suit', (tc) => {
+  tc.plan(7)
+  tc.test('fnow must throw an exception if the range argument is not valid', (t) => {
+    t.plan(4)
+    let rangeF = null
+    const column = '2020-11-09T18:41:14.419Z'
 
-	describe('fnow', () => {
+    t.throws(() => {
+      fnow(column, rangeF)
+    })
 
-		test('fnow must throw an exception if the range argument is not valid', () => {
-			let rangeF = null;
-			const column = '2020-11-09T18:41:14.419Z';
+    rangeF = undefined
+    t.throws(() => {
+      fnow(column, rangeF)
+    })
 
-			expect(() => {
-				fnow(column, rangeF);
-			}).toThrow(Error);
+    rangeF = true
+    t.throws(() => {
+      fnow(column, rangeF)
+    })
 
-			rangeF = undefined;
-			expect(() => {
-				fnow(column, rangeF);
-			}).toThrow(Error);
+    rangeF = 9099
+    t.throws(() => {
+      fnow(column, rangeF)
+    })
+  })
 
-			rangeF = true;
-			expect(() => {
-				fnow(column, rangeF);
-			}).toThrow(Error);
+  tc.test('fnow must return false on P30D of 2020-11-09T18:41:14.419Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P30D'
+    const column = '2020-11-09T18:41:14.419Z'
 
-			rangeF = 9099;
-			expect(() => {
-				fnow(column, rangeF);
-			}).toThrow(Error);
-		});
+    MockDate.set('2020-11-09')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return false on P30D of 2020-11-09T18:41:14.419Z', () => {
-			const rangeF = 'P30D';
-			const column = '2020-11-09T18:41:14.419Z';
+    t.notOk(result)
+  })
 
-			let result;
-			MockDate.set('2020-11-09');
-			result = fnow(column, rangeF);
+  tc.test('fnow must return true on P30D of 2010-11-09T18:41:14.419Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P30D'
+    const column = '2010-11-09T18:41:14.419Z'
 
-			expect(result).toBe(false);
-		});
+    MockDate.set('2020-11-09')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return true on P30D of 2010-11-09T18:41:14.419Z', () => {
-			const rangeF = 'P30D';
-			const column = '2010-11-09T18:41:14.419Z';
+    t.ok(result)
+  })
 
-			let result;
-			MockDate.set('2020-11-09');
-			result = fnow(column, rangeF);
+  tc.test('fnow must return true on P2D of 2020-11-05T18:41:14.419Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P2D'
+    const column = '2020-11-05 14:22:48.672979-06'
 
-			expect(result).toBe(true);
-		});
+    MockDate.set('2020-11-09')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return true on P2D of 2020-11-05T18:41:14.419Z', () => {
-			const rangeF = 'P2D';
-			const column = '2020-11-05 14:22:48.672979-06';
+    t.ok(result)
+  })
 
-			let result;
-			MockDate.set('2020-11-09');
-			result = fnow(column, rangeF);
+  tc.test('fnow should be exact on the compares', (t) => {
+    t.plan(2)
+    const rangeF = 'P1D'
+    const column = '2020-11-07T18:41:14.419Z'
 
-			expect(result).toBe(true);
-		});
+    let result
+    MockDate.set('2020-11-08T18:41:14.419Z')
+    result = fnow(column, rangeF)
 
-		test('fnow should be exact on the compares', () => {
-			const rangeF = 'P1D';
-			let column = '2020-11-07T18:41:14.419Z';
+    t.equal(result, false)
 
-			let result;
-			MockDate.set('2020-11-08T18:41:14.419Z');
-			result = fnow(column, rangeF);
+    MockDate.set('2020-11-08T18:42:14.419Z')
+    result = fnow(column, rangeF)
+    t.ok(result)
+  })
 
-			expect(result).toBe(false);
+  tc.test('fnow must return true on P20D of 2017-11-29T09:45:10.000Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P20D'
+    const column = '2017-11-29T09:45:10.000Z'
 
-			MockDate.set('2020-11-08T18:42:14.419Z');
-			result = fnow(column, rangeF);
-			expect(result).toBe(true);
-		});
+    MockDate.set('2020-11-09T20:13:47.949Z')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return true on P20D of 2017-11-29T09:45:10.000Z', () => {
-			const rangeF = 'P20D';
-			let column = '2017-11-29T09:45:10.000Z';
+    t.ok(result)
+  })
 
-			let result;
-			MockDate.set('2020-11-09T20:13:47.949Z');
-			result = fnow(column, rangeF);
+  tc.test('fnow must return true on P1Y of 2008-11-29T09:25:20.000Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P1Y'
+    const column = '2015-03-03 13:57:54.856896'
 
-			expect(result).toBe(true);
-		});
+    MockDate.set('2021-01-13T17:12:46.980Z')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return true on P1Y of 2008-11-29T09:25:20.000Z', () => {
-			const rangeF = 'P1Y';
-			let column = '2015-03-03 13:57:54.856896';
+    t.ok(result)
+  })
 
-			let result;
-			MockDate.set('2021-01-13T17:12:46.980Z');
-			result = fnow(column, rangeF);
+  test('fnow must return false on P1Y of 2020-11-29T09:25:20.000Z', (t) => {
+    t.plan(1)
+    const rangeF = 'P1Y'
+    const column = '2020-11-29T09:25:20.000Z'
 
-			expect(result).toBe(true);
-		});
+    MockDate.set('2021-01-13T17:12:46.980Z')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return false on P1Y of 2020-11-29T09:25:20.000Z', () => {
-			const rangeF = 'P1Y';
-			let column = '2020-11-29T09:25:20.000Z';
+    t.notOk(result)
+  })
 
-			let result;
-			MockDate.set('2021-01-13T17:12:46.980Z');
-			result = fnow(column, rangeF);
+  test('fnow must return false on P1Y on a recent date', (t) => {
+    t.plan(1)
+    const rangeF = 'P1Y'
+    const column = '2021-01-01T17:13:46.980Z'
 
-			expect(result).toBe(false);
-		});
+    MockDate.set('2021-01-01T17:12:46.980Z')
+    const result = fnow(column, rangeF)
 
-		test('fnow must return false on P1Y on a recent date', () => {
-			const rangeF = 'P1Y';
-			let column = '2021-01-01T17:13:46.980Z';
+    t.notOk(result)
+  })
 
-			let result;
-			MockDate.set('2021-01-01T17:12:46.980Z');
-			result = fnow(column, rangeF);
+  test('ftest must return and object with arguments', (t) => {
+    t.plan(4)
 
-			expect(result).toBe(false);
-		});
-	});
+    const result = ftest(1, '1', '2', '3')
 
-});
+    t.hasProp(result, 'val')
+    t.hasProp(result, 'arg1')
+    t.hasProp(result, 'arg2')
+    t.hasProp(result, 'arg3')
+  })
+})

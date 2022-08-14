@@ -1,302 +1,317 @@
+/* eslint-disable no-tabs */
 /* test/lib/analyzer/index.spec.js */
 
-const MockDate = require('mockdate');
+const MockDate = require('mockdate')
+const t = require('tap')
 
-const Analyzer = require('../../../lib/analyzer');
-const { splitCopyStatement } = require('../../../lib/utils');
+const Analyzer = require('../../../lib/analyzer')
+const { splitCopyStatement } = require('../../../lib/utils')
 
 const PGFILTER_PARSED_FILE = {
-	"public.actor": {
-		"first_name": "faker.name.firstName",
-		"last_name": "faker.name.lastName"
-	},
-	"public.address": {
-		"address": "faker.address.streetName",
-		"address2": "faker.address.streetName",
-		"phone": "faker.phone.phoneNumber"
-	},
-	"public.city": {
-		"city": "faker.address.city"
-	},
-	"public.country": {
-		"country": "faker.address.country"
-	},
-	"public.customer": {
-		"first_name": "faker.name.firstName",
-		"last_name": "faker.name.lastName",
-		"email": "faker.internet.email"
-	},
-	"public.amount": {
-		"amount": "faker.datatype.number"
-	},
-	"public.history": {
-		"ip": "faker.internet.ip",
-		"cdate": "pgfilter.filter.fnow-P30D"
-	}
-};
+  'public.actor': {
+    first_name: 'faker.name.firstName',
+    last_name: 'faker.name.lastName'
+  },
+  'public.address': {
+    address: 'faker.address.streetName',
+    address2: 'faker.address.streetName',
+    phone: 'faker.phone.phoneNumber'
+  },
+  'public.city': {
+    city: 'faker.address.city'
+  },
+  'public.country': {
+    country: 'faker.address.country'
+  },
+  'public.customer': {
+    first_name: 'faker.name.firstName',
+    last_name: 'faker.name.lastName',
+    email: 'faker.internet.email'
+  },
+  'public.amount': {
+    amount: 'faker.datatype.number'
+  },
+  'public.history': {
+    ip: 'faker.internet.ip',
+    cdate: 'pgfilter.filter.fnow-P30D'
+  }
+}
 
-let verboseMode = false;
+const verboseMode = false
 
-describe('Analyzer', () => {
+t.test('_setMappedRelation must set null if the statement from the backup file is not related to importing data(COPY)', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-	describe('_setMappedRelation', () => {
-		test('_setMappedRelation must set null if the statement from the backup file is not related to importing data(COPY)', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  const line = 'SELECT random.function_cal(1, 2, 3)'
+  an._setMappedRelation(splitCopyStatement(line))
+  tt.equal(an.relation, null)
+})
 
-			const line = `SELECT random.function_cal(1, 2, 3)`;
-			an._setMappedRelation(splitCopyStatement(line));
-			expect(an.relation).toBe(null);
-		});
+t.test('_setMappedRelation must set the relation/table if the table/relation is present in the pgfilter file', (tt) => {
+  tt.plan(2)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-		test('_setMappedRelation must set the relation/table if the table/relation is present in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  an._setMappedRelation(splitCopyStatement(line))
+  tt.equal(an.relation, 'public.actor')
 
-			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			an._setMappedRelation(splitCopyStatement(line));
-			expect(an.relation).toBe('public.actor');
-			line = `COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;`;
-			an._setMappedRelation(splitCopyStatement(line));
-			expect(an.relation).toBe('public.address');
-		});
+  line = 'COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;'
+  an._setMappedRelation(splitCopyStatement(line))
+  tt.equal(an.relation, 'public.address')
+})
 
-		test('_setMappedRelation must set null if the table/relation is not present in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+t.test('_setMappedRelation must set null if the table/relation is not present in the pgfilter file', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-			let line = `COPY public.category (category_id, name, last_update) FROM stdin;`;
-			an._setMappedRelation(splitCopyStatement(line));
-			expect(an.relation).toBe(null);
-		});
-	});
+  const line = 'COPY public.category (category_id, name, last_update) FROM stdin;'
+  an._setMappedRelation(splitCopyStatement(line))
+  tt.equal(an.relation, null)
+})
 
-	describe('_setColumnsFromLine', () => {
-		test('_setColumnsFromLine must set the columns in the variable _columns from the COPY FROM statement line as an array to use the index for fast location', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+t.test('_setColumnsFromLine must set the columns in the variable _columns from the COPY FROM statement line as an array to use the index for fast location', (tt) => {
+  tt.plan(21)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			an._setColumnsFromLine(splitCopyStatement(line));
-			expect(an.columns).toBeArrayOfSize(4);
-			expect(an.columns[0]).toBe('actor_id');
-			expect(an.columns[1]).toBe('first_name');
-			expect(an.columns[2]).toBe('last_name');
-			expect(an.columns[3]).toBe('last_update');
+  let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  an._setColumnsFromLine(splitCopyStatement(line))
+  tt.ok(Array.isArray(an.columns))
+  tt.equal(an.columns.length, 4)
+  tt.equal(an.columns[0], 'actor_id')
+  tt.equal(an.columns[1], 'first_name')
+  tt.equal(an.columns[2], 'last_name')
+  tt.equal(an.columns[3], 'last_update')
 
+  line = 'COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;'
+  an._setColumnsFromLine(splitCopyStatement(line))
+  tt.ok(Array.isArray(an.columns))
+  tt.equal(an.columns.length, 8)
+  tt.equal(an.columns[0], 'address_id')
+  tt.equal(an.columns[1], 'address')
+  tt.equal(an.columns[2], 'address2')
+  tt.equal(an.columns[3], 'district')
+  tt.equal(an.columns[4], 'city_id')
+  tt.equal(an.columns[5], 'postal_code')
+  tt.equal(an.columns[6], 'phone')
+  tt.equal(an.columns[7], 'last_update')
 
-			line = `COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;`;
-			an._setColumnsFromLine(splitCopyStatement(line));
-			expect(an.columns).toBeArrayOfSize(8);
-			expect(an.columns[0]).toBe('address_id');
-			expect(an.columns[1]).toBe('address');
-			expect(an.columns[2]).toBe('address2');
-			expect(an.columns[3]).toBe('district');
-			expect(an.columns[4]).toBe('city_id');
-			expect(an.columns[5]).toBe('postal_code');
-			expect(an.columns[6]).toBe('phone');
-			expect(an.columns[7]).toBe('last_update');
+  line = 'COPY public.country (country_id, country, last_update) FROM stdin;'
+  an._setColumnsFromLine(splitCopyStatement(line))
+  tt.ok(Array.isArray(an.columns))
+  tt.equal(an.columns.length, 3)
+  tt.equal(an.columns[0], 'country_id')
+  tt.equal(an.columns[1], 'country')
+  tt.equal(an.columns[2], 'last_update')
+})
 
-			line = `COPY public.country (country_id, country, last_update) FROM stdin;`;
-			an._setColumnsFromLine(splitCopyStatement(line));
-			expect(an.columns).toBeArrayOfSize(3);
-			expect(an.columns[0]).toBe('country_id');
-			expect(an.columns[1]).toBe('country');
-			expect(an.columns[2]).toBe('last_update');
-		});
-	});
+t.test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _columns and _relation are nulls', (tt) => {
+  tt.plan(2)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const line = 'CREATE FUNCTION TEST...'
+  an._setMappedRelation(splitCopyStatement(line))
+  an._setColumnsFromLine(splitCopyStatement(line))
+  an._setAffectedColumns()
 
-	describe('_setAffectedColumns', () => {
-		test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _columns and _relation are nulls', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			let line = `CREATE FUNCTION TEST...`;
-			an._setMappedRelation(splitCopyStatement(line));
-			an._setColumnsFromLine(splitCopyStatement(line));
-			an._setAffectedColumns();
+  tt.ok(Array.isArray(an.affectedTransColnsIdx))
+  tt.equal(an.affectedTransColnsIdx.length, 0)
+})
 
-			expect(an.affectedTransColnsIdx).toBeEmpty();
-		});
+t.test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation', (tt) => {
+  tt.plan(9)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-		test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  const tkns = splitCopyStatement(line)
+  an._setMappedRelation(tkns)
+  an._setColumnsFromLine(tkns)
+  an._setAffectedColumns()
 
-			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			let tkns = splitCopyStatement(line);
-			an._setMappedRelation(tkns);
-			an._setColumnsFromLine(tkns);
-			an._setAffectedColumns();
-			expect(an.affectedTransColnsIdx).toBeArrayOfSize(2);
-			expect(an.affectedTransColnsIdx[0]).toBe(1); // first_name
-			expect(an.affectedTransColnsIdx[1]).toBe(2); // last_name
+  tt.ok(Array.isArray(an.affectedTransColnsIdx))
+  tt.equal(an.affectedTransColnsIdx.length, 2)
+  tt.equal(an.affectedTransColnsIdx[0], 1) // first_name
+  tt.equal(an.affectedTransColnsIdx[1], 2) // last_name
 
-			an.reset(); // Clean up internal metadata
+  an.reset() // Clean up internal metadata
 
-			line = `COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;`;
-			an._setMappedRelation(splitCopyStatement(line));
-			an._setColumnsFromLine(splitCopyStatement(line));
-			an._setAffectedColumns();
-			expect(an.affectedTransColnsIdx).toBeArrayOfSize(3);
-			expect(an.affectedTransColnsIdx[0]).toBe(1); // address
-			expect(an.affectedTransColnsIdx[1]).toBe(2); // address2
-			expect(an.affectedTransColnsIdx[2]).toBe(6); //phone
-		});
+  line = 'COPY public.address (address_id, address, address2, district, city_id, postal_code, phone, last_update) FROM stdin;'
+  an._setMappedRelation(splitCopyStatement(line))
+  an._setColumnsFromLine(splitCopyStatement(line))
+  an._setAffectedColumns()
+  tt.ok(Array.isArray(an.affectedTransColnsIdx))
+  tt.equal(an.affectedTransColnsIdx.length, 3)
+  tt.equal(an.affectedTransColnsIdx[0], 1) // address
+  tt.equal(an.affectedTransColnsIdx[1], 2) // address2
+  tt.equal(an.affectedTransColnsIdx[2], 6) // phone
+})
 
-		test('_setAffectedColumns must set an array of function labels for transformation with the same size of affectedTransColnsIdx and the respective function to use', () => {
+t.test('_setAffectedColumns must set an array of function labels for transformation with the same size of affectedTransColnsIdx and the respective function to use', (tt) => {
+  tt.plan(4)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  const tkns = splitCopyStatement(line)
+  an._setMappedRelation(tkns)
+  an._setColumnsFromLine(tkns)
+  an._setAffectedColumns()
 
-			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			let tkns = splitCopyStatement(line);
-			an._setMappedRelation(tkns);
-			an._setColumnsFromLine(tkns);
-			an._setAffectedColumns();
-			expect(an.affectedTransColnsFn).toBeArrayOfSize(2);
-			expect(an.affectedTransColnsFn[0]).toBe('faker.name.firstName'); // first_name
-			expect(an.affectedTransColnsFn[1]).toBe('faker.name.lastName'); // last_name
-		});
+  tt.ok(Array.isArray(an.affectedTransColnsFn))
+  tt.equal(an.affectedTransColnsFn.length, 2)
+  tt.equal(an.affectedTransColnsFn[0], 'faker.name.firstName') // first_name
+  tt.equal(an.affectedTransColnsFn[1], 'faker.name.lastName') // last_name
+})
 
-		test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', () => {
+t.test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', (tt) => {
+  tt.plan(12)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
+  const tkns = splitCopyStatement(line)
+  an._setMappedRelation(tkns)
+  an._setColumnsFromLine(tkns)
+  an._setAffectedColumns()
 
-			let line = `COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;`;
-			let tkns = splitCopyStatement(line);
-			an._setMappedRelation(tkns);
-			an._setColumnsFromLine(tkns);
-			an._setAffectedColumns();
-			expect(an.affectedFiltrColnsFn).toBeArrayOfSize(1);
-			expect(an.affectedFiltrColnsIdx).toBeArrayOfSize(1);
-			expect(an.affectedFiltrColnsIdx[0]).toBe(4); // cdate
-			expect(an.affectedFiltrColnsFn[0]).toBe('pgfilter.filter.fnow-P30D');
-			expect(an.affectedTransColnsIdx).toBeArrayOfSize(1);
-			expect(an._affectedFiltrColnsFn).toBeArrayOfSize(1);
-			expect(an.affectedTransColnsIdx[0]).toBe(3); // ip
-			expect(an.affectedTransColnsFn[0]).toBe('faker.internet.ip');
-		});
-	});
+  tt.ok(Array.isArray(an.affectedFiltrColnsFn))
+  tt.ok(Array.isArray(an.affectedFiltrColnsIdx))
+  tt.equal(an.affectedFiltrColnsFn.length, 1)
+  tt.equal(an.affectedFiltrColnsIdx.length, 1)
 
-	describe('check', () => {
-		test('check method must return null if the relation is not mapped in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  tt.equal(an.affectedFiltrColnsIdx[0], 4) // cdate
+  tt.equal(an.affectedFiltrColnsFn[0], 'pgfilter.filter.fnow-P30D')
+  tt.ok(Array.isArray(an.affectedTransColnsIdx))
+  tt.ok(Array.isArray(an._affectedFiltrColnsFn))
+  tt.equal(an.affectedFiltrColnsFn.length, 1)
+  tt.equal(an.affectedFiltrColnsIdx.length, 1)
+  tt.equal(an.affectedTransColnsIdx[0], 3) // ip
+  tt.equal(an.affectedTransColnsFn[0], 'faker.internet.ip')
+})
 
-			const line = `COPY public.random (random_id, random_col1, random_col2) FROM stdin;`;
-			let rel = an.check(line);
-			expect(rel).toBe(null);
-		});
+t.test('check method must return null if the relation is not mapped in the pgfilter file', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-		test('check method must return the table name if the relation is mapped in the pgfilter file', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  const line = 'COPY public.random (random_id, random_col1, random_col2) FROM stdin;'
+  const rel = an.check(line)
+  tt.equal(rel, null)
+})
 
-			const line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			let rel = an.check(line);
-			expect(rel).toBe('public.actor');
-		});
-	});
+t.test('check method must return the table name if the relation is mapped in the pgfilter file', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-	describe('_applyFn', () => {
-		test('_applyFn must return the val argument if the function label is not valid', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  const rel = an.check(line)
+  tt.equal(rel, 'public.actor')
+})
 
-			expect(an._applyFn('test.default.name', 'John')).toBe('John')
-		});
+t.test('_applyFn must return the val argument if the function label is not valid', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-		test('_applyFn must change the val argument if the function label is valid', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
+  tt.equal((an._applyFn('test.default.name', 'John')), 'John')
+})
 
-			expect(an._applyFn('faker.name.firstName', 'John')).not.toBe('John');
-		});
+t.test('_applyFn must change the val argument if the function label is valid', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
 
-		test('_applyFn must call the function with all the arguments involved', () => {
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			let colVal = 'mytest'
-			const res = an._applyFn('pgfilter.filter.ftest-1-2-3', colVal)
-			expect(res).toHaveProperty('val', colVal);
-			expect(res).toHaveProperty('arg1', 1);
-			expect(res).toHaveProperty('arg2', 2);
-			expect(res).toHaveProperty('arg3', 3);
-		});
-	});
+  tt.not(an._applyFn('faker.name.firstName', 'John'), 'John')
+})
 
-	describe('_transform', () => {
-		test('_transform must return a differnt line for a mapped relation on the pgfilter file', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			const cline = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;';
-			an.check(cline);
+t.test('_applyFn must call the function with all the arguments involved', (tt) => {
+  tt.plan(8)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const colVal = 'mytest'
+  const res = an._applyFn('pgfilter.filter.ftest-1-2-3', colVal)
+  tt.hasProp(res, 'val')
+  tt.hasProp(res, 'arg1')
+  tt.hasProp(res, 'arg2')
+  tt.hasProp(res, 'arg3')
+  tt.equal(res.val, colVal)
+  tt.equal(res.arg1, 1)
+  tt.equal(res.arg2, 2)
+  tt.equal(res.arg3, 3)
+})
 
-			dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62';
-			rline = an._transform(dline.split('\t'));
-			expect(rline).not.toBe(dline);
+t.test('_transform must return a differnt line for a mapped relation on the pgfilter file', (tt) => {
+  tt.plan(2)
+  let rline, dline
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const cline = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  an.check(cline)
 
-			dline = '4	Jennifer	Davis	2013-05-26 14:47:57.62'
-			rline = an._transform(dline.split('\t'));
-			expect(rline).not.toBe(dline);
-		});
-	});
+  dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62'
+  rline = an._transform(dline.split('\t'))
+  tt.not(rline, dline)
 
-	describe('_filter', () => {
-		test('_filter must return false if the filterning function does not match the condition', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
-			an.check(cline);
+  dline = '4	Jennifer	Davis	2013-05-26 14:47:57.62'
+  rline = an._transform(dline.split('\t'))
+  tt.not(rline, dline)
+})
 
-			MockDate.set('2022-01-18');
+t.test('_filter must return false if the filterning function does not match the condition', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
+  an.check(cline)
 
-			dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62';
-			rline = an._filter(dline.split('\t'));
-			expect(rline).toBe(false);
-		});
+  MockDate.set('2022-01-18')
 
-		test('_filter must return true if the filterning function match the condition and the line should be excluded', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
-			an.check(cline);
+  const dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62'
+  const rline = an._filter(dline.split('\t'))
+  tt.notOk(rline)
+})
 
-			MockDate.set('2022-01-18');
+t.test('_filter must return true if the filterning function match the condition and the line should be excluded', (tt) => {
+  tt.plan(2)
+  let rline, dline
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
+  an.check(cline)
 
-			dline = '1	1	ADD	192.168.1.1	2021-01-17 14:47:57.62';
-			rline = an._filter(dline.split('\t'));
-			expect(rline).toBe(true);
+  MockDate.set('2022-01-18')
 
-			dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62';
-			rline = an._filter(dline.split('\t'));
-			expect(rline).toBe(true);
-		});
-	});
+  dline = '1	1	ADD	192.168.1.1	2021-01-17 14:47:57.62'
+  rline = an._filter(dline.split('\t'))
+  tt.ok(rline)
 
-	describe('apply', () => {
-		test('apply must transform the mapped column on the pgfilter file', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			let line = `COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;`;
-			an.check(line);
+  dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62'
+  rline = an._filter(dline.split('\t'))
+  tt.ok(rline)
+})
 
-			dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62';
-			rline = an.apply(dline);
-			expect(rline).not.toBe(null);
-			expect(rline).not.toBe(dline);
-		});
+t.test('apply must transform the mapped column on the pgfilter file', (tt) => {
+  tt.plan(2)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  an.check(line)
 
-		test('apply must filter the mapped column on the pgfilter file', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			let line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
-			an.check(line);
+  const dline = '1	Penelope	Guiness	2013-05-26 14:47:57.62'
+  const rline = an.apply(dline)
+  tt.not(rline, null)
+  tt.not(rline, dline)
+})
 
-			dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62';
-			rline = an.apply(dline);
-			expect(rline).toBe(null);
-		});
+t.test('apply must filter the mapped column on the pgfilter file', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
+  an.check(line)
 
-		test('apply must filter & transform the mapped column on the pgfilter file', () => {
-			let rline, dline;
-			const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode);
-			let line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;';
-			an.check(line);
-			MockDate.set('2022-01-18');
+  const dline = '1	1	ADD	192.168.1.1	2000-01-17 16:55:22.62'
+  const rline = an.apply(dline)
+  tt.equal(rline, null)
+})
 
-			dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62';
-			rline = an.apply(dline);
-			expect(rline).not.toBe(null);
-			expect(rline).not.toBe(dline);
-		});
-	});
-});
+t.test('apply must filter & transform the mapped column on the pgfilter file', (tt) => {
+  tt.plan(2)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
+  an.check(line)
+  MockDate.set('2022-01-18')
+
+  const dline = '1	1	ADD	192.168.1.1	2022-01-17 14:47:57.62'
+  const rline = an.apply(dline)
+  tt.not(rline, null)
+  tt.not(rline, dline)
+})
