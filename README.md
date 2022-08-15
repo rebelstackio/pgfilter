@@ -1,5 +1,6 @@
 [![CI](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml/badge.svg)](https://github.com/rebelstackio/pgfilter/actions/workflows/build.yml)
 [![view on npm](https://img.shields.io/npm/l/@rebelstack-io/pgfilter)](https://www.npmjs.com/package/@rebelstack-io/pgfilter)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
 # pgfilter
 
