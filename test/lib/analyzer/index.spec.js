@@ -105,6 +105,51 @@ t.test('_setColumnsFromLine must set the columns in the variable _columns from t
   tt.equal(an.columns[2], 'last_update')
 })
 
+t.test('_setColumnsFromLine must return null if the tokens are invalid', (tt) => {
+  tt.plan(4)
+
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  let res = an._setColumnsFromLine(null)
+  tt.notOk(res)
+
+  res = an._setColumnsFromLine(undefined)
+  tt.notOk(res)
+
+  res = an._setColumnsFromLine(false)
+  tt.notOk(res)
+
+  res = an._setColumnsFromLine('')
+  tt.notOk(res)
+})
+
+t.test('_setMappedRelation must return null if the tokens are invalid', (tt) => {
+  tt.plan(4)
+
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  let res = an._setMappedRelation(null)
+  tt.notOk(res)
+
+  res = an._setMappedRelation(undefined)
+  tt.notOk(res)
+
+  res = an._setMappedRelation(false)
+  tt.notOk(res)
+
+  res = an._setMappedRelation('')
+  tt.notOk(res)
+})
+
+t.test('_setAffectedColumns must return null if the relation is not present or valid', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const line = 'COPY public.pet (pet_id, first_name, last_update) FROM stdin;'
+  an._setMappedRelation(splitCopyStatement(line))
+  an._setColumnsFromLine(splitCopyStatement(line))
+  const res = an._setAffectedColumns()
+
+  tt.notOk(res)
+})
+
 t.test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _columns and _relation are nulls', (tt) => {
   tt.plan(2)
   const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
@@ -198,6 +243,15 @@ t.test('check method must return null if the relation is not mapped in the pgfil
 t.test('check method must return the table name if the relation is mapped in the pgfilter file', (tt) => {
   tt.plan(1)
   const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+
+  const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
+  const rel = an.check(line)
+  tt.equal(rel, 'public.actor')
+})
+
+t.test('check method must call console.warn on verbose mode', (tt) => {
+  tt.plan(1)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, true)
 
   const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   const rel = an.check(line)
@@ -314,4 +368,12 @@ t.test('apply must filter & transform the mapped column on the pgfilter file', (
   const rline = an.apply(dline)
   tt.not(rline, null)
   tt.not(rline, dline)
+})
+
+t.test('onVerboseMode return the current verbose mode', (tt) => {
+  tt.plan(2)
+  let an = new Analyzer(PGFILTER_PARSED_FILE)
+  tt.notOk(an.onVerboseMode)
+  an = new Analyzer(PGFILTER_PARSED_FILE, true)
+  tt.ok(an.onVerboseMode)
 })
