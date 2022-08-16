@@ -1,6 +1,8 @@
 #!/bin/bash
 
-pgfilter -vf vagrant/test/dvdrental.default.json vagrant/backup/dvdrental.dump > dvdrental.transformed.dump
+command=$(which pgfilter)
+
+$command -vf vagrant/test/dvdrental.default.json vagrant/backup/dvdrental.dump > dvdrental.transformed.dump
 
 original_num_lines=$(wc vagrant/backup/dvdrental.dump -l | cut -d ' ' -f 1)
 trans_num_lines=$(wc dvdrental.transformed.dump -l | cut -d ' ' -f 1)
