@@ -33,7 +33,7 @@ jobs:
 
       - name: Install package globally
         run: |
-          npm i -g
+          npm i --location=global
 
       - name: Test
         if: ${{ success() }}

@@ -1,21 +1,24 @@
 #!/bin/bash
 
-pgfilter -f vagrant/test/dvdrental.default.json vagrant/backup/dvdrental.dump > dvdrental.transformed.dump -v
+pgfilter -vf vagrant/test/dvdrental.default.json vagrant/backup/dvdrental.dump > dvdrental.transformed.dump
 
-original_num_lines=$(wc vagrant/backup/dvdrental.dump -l)
-trans_num_lines=$(wc dvdrental.transformed.dump -l)
+original_num_lines=$(wc vagrant/backup/dvdrental.dump -l | cut -d ' ' -f 1)
+trans_num_lines=$(wc dvdrental.transformed.dump -l | cut -d ' ' -f 1)
+code=1
 
 if [ "$original_num_lines" -ne "$trans_num_lines" ]; then
-  exit 1
+  echo "Different number of lines. Something wrong happended..."
+  code=1
 fi
 
-diff vagrant/backup/dvdrental.dump dvdrental.transformed.dump 2> /dev/null
-
-if [ $? -eq 0 ]
-then
+if cmp -s vagrant/backup/dvdrental.dump dvdrental.transformed.dump; then
   echo "Files are identical. Something wrong happended..."
-  exit 1
+  rm dvdrental.transformed.dump
+  code=1
 else
   echo "Same number of lines and file are different"
-  exit 0
+  code=0
 fi
+
+rm dvdrental.transformed.dump
+exit $code
