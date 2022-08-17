@@ -213,6 +213,11 @@ tc.test('validBackupFile must not throw an error if the file is null( STDIN ) an
   t.equal(validBackupFile(null), null)
 })
 
+tc.test('validBuffer must return undefined if the buffer is undefined', (t) => {
+  t.plan(1)
+  t.equal(validBuffer(undefined), undefined)
+})
+
 tc.test('validBuffer must throw an error if the buffer is NaN', (t) => {
   t.plan(1)
   t.throws(() => {
