@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/rebelstackio/pgfilter/compare/v1.3.1...v1.4.0) (2022-08-17)
+
+
+### Bug Fixes
+
+* **cli:** fix buffer argument validation ([10cb284](https://github.com/rebelstackio/pgfilter/commit/10cb284be1d35a1cf56583100d5bded1fde09dcb))
+
+
+### Features
+
+* **test:** add more testing tool and fix common errors ([b2241d9](https://github.com/rebelstackio/pgfilter/commit/b2241d9358604e86c254bb38abaf9f4009fcbb15))
+
 ## [1.3.1](https://github.com/rebelstackio/pgfilter/compare/v1.3.0...v1.3.1) (2022-08-09)
 
 
