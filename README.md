@@ -201,7 +201,7 @@ use Linux amazing piping features
 ### Vagrant Env
 Check Vagrant Environment [here](./vagrant/README.md)
 
-### Configure hooks
+<!-- ### Configure hooks
 ```sh
 npx husky add .husky/commit-msg 'npx commitlint --edit $1'
-```
+``` -->
