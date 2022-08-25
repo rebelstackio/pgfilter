@@ -87,7 +87,7 @@ won't be included in the restore.
 
 - Arguments:
 
-	- `dur`: ISO8601DUR representation.
+	- `dur`: [ISO8601DUR representation](https://en.wikipedia.org/wiki/ISO_8601#Durations).
 
 - Example:
 
