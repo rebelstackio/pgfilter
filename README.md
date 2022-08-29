@@ -82,8 +82,8 @@ CREATE TABLE public.users (
 		id         SERIAL,
 		name       VARCHAR(40),
 		lastname   VARCHAR(40),
-		addr1      TEXT
-		addr2      TEXT
+		addr1      TEXT,
+		addr2      TEXT,
 		email      VARCHAR(40),
 		phone      VARCHAR(25),
 );
