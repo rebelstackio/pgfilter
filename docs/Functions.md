@@ -112,4 +112,4 @@ For example:
 - `faker.internet.password`
 
 
-For more information. Check [faker API methods](https://github.com/faker-js/faker#api)
+For more information. Check [faker API methods](https://github.com/faker-js/faker#-modules)
