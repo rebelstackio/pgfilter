@@ -99,6 +99,8 @@ won't be included in the restore.
 		}
 	}
 	```
+
+__NOTE__ `fnow` does not support Week duration yet. eg `P1W`
 ### faker
 
 All the functions on [faker.js](https://github.com/faker-js/faker) API are available.
