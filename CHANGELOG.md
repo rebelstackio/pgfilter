@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/rebelstackio/pgfilter/compare/v1.4.0...v1.5.0) (2022-08-31)
+
+
+### Features
+
+* **filter:** allow more duration expression on filter function ([1c8363f](https://github.com/rebelstackio/pgfilter/commit/1c8363f16f18179e698324aacd5730c795962e10))
+
 # [1.4.0](https://github.com/rebelstackio/pgfilter/compare/v1.3.1...v1.4.0) (2022-08-17)
 
 
