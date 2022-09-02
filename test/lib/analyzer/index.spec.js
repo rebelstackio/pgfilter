@@ -38,10 +38,11 @@ const PGFILTER_PARSED_FILE = {
 }
 
 const verboseMode = false
+const loggerSpy = () => {}
 
 t.test('_setMappedRelation must set null if the statement from the backup file is not related to importing data(COPY)', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'SELECT random.function_cal(1, 2, 3)'
   an._setMappedRelation(splitCopyStatement(line))
@@ -50,7 +51,7 @@ t.test('_setMappedRelation must set null if the statement from the backup file i
 
 t.test('_setMappedRelation must set the relation/table if the table/relation is present in the pgfilter file', (tt) => {
   tt.plan(2)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   an._setMappedRelation(splitCopyStatement(line))
@@ -63,7 +64,7 @@ t.test('_setMappedRelation must set the relation/table if the table/relation is 
 
 t.test('_setMappedRelation must set null if the table/relation is not present in the pgfilter file', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'COPY public.category (category_id, name, last_update) FROM stdin;'
   an._setMappedRelation(splitCopyStatement(line))
@@ -72,7 +73,7 @@ t.test('_setMappedRelation must set null if the table/relation is not present in
 
 t.test('_setColumnsFromLine must set the columns in the variable _columns from the COPY FROM statement line as an array to use the index for fast location', (tt) => {
   tt.plan(21)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   an._setColumnsFromLine(splitCopyStatement(line))
@@ -108,7 +109,7 @@ t.test('_setColumnsFromLine must set the columns in the variable _columns from t
 t.test('_setColumnsFromLine must return null if the tokens are invalid', (tt) => {
   tt.plan(4)
 
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   let res = an._setColumnsFromLine(null)
   tt.notOk(res)
 
@@ -125,7 +126,7 @@ t.test('_setColumnsFromLine must return null if the tokens are invalid', (tt) =>
 t.test('_setMappedRelation must return null if the tokens are invalid', (tt) => {
   tt.plan(4)
 
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   let res = an._setMappedRelation(null)
   tt.notOk(res)
 
@@ -141,7 +142,7 @@ t.test('_setMappedRelation must return null if the tokens are invalid', (tt) => 
 
 t.test('_setAffectedColumns must return null if the relation is not present or valid', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const line = 'COPY public.pet (pet_id, first_name, last_update) FROM stdin;'
   an._setMappedRelation(splitCopyStatement(line))
   an._setColumnsFromLine(splitCopyStatement(line))
@@ -152,7 +153,7 @@ t.test('_setAffectedColumns must return null if the relation is not present or v
 
 t.test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _columns and _relation are nulls', (tt) => {
   tt.plan(2)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const line = 'CREATE FUNCTION TEST...'
   an._setMappedRelation(splitCopyStatement(line))
   an._setColumnsFromLine(splitCopyStatement(line))
@@ -164,7 +165,7 @@ t.test('_setAffectedColumns must set affectedTransColnsIdx as empty if the _colu
 
 t.test('_setAffectedColumns must set an array with the index positions of the columns that requires transformation', (tt) => {
   tt.plan(9)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   let line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   const tkns = splitCopyStatement(line)
@@ -192,7 +193,7 @@ t.test('_setAffectedColumns must set an array with the index positions of the co
 
 t.test('_setAffectedColumns must set an array of function labels for transformation with the same size of affectedTransColnsIdx and the respective function to use', (tt) => {
   tt.plan(4)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   const tkns = splitCopyStatement(line)
@@ -208,7 +209,7 @@ t.test('_setAffectedColumns must set an array of function labels for transformat
 
 t.test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', (tt) => {
   tt.plan(12)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
   const tkns = splitCopyStatement(line)
@@ -233,7 +234,7 @@ t.test('_setAffectedColumns must set an array with the index positions of the co
 
 t.test('check method must return null if the relation is not mapped in the pgfilter file', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'COPY public.random (random_id, random_col1, random_col2) FROM stdin;'
   const rel = an.check(line)
@@ -242,7 +243,7 @@ t.test('check method must return null if the relation is not mapped in the pgfil
 
 t.test('check method must return the table name if the relation is mapped in the pgfilter file', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   const rel = an.check(line)
@@ -251,7 +252,7 @@ t.test('check method must return the table name if the relation is mapped in the
 
 t.test('check method must call console.warn on verbose mode', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, true)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, true, loggerSpy)
 
   const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   const rel = an.check(line)
@@ -260,21 +261,21 @@ t.test('check method must call console.warn on verbose mode', (tt) => {
 
 t.test('_applyFn must return the val argument if the function label is not valid', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   tt.equal((an._applyFn('test.default.name', 'John')), 'John')
 })
 
 t.test('_applyFn must change the val argument if the function label is valid', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
   tt.not(an._applyFn('faker.name.firstName', 'John'), 'John')
 })
 
 t.test('_applyFn must call the function with all the arguments involved', (tt) => {
   tt.plan(8)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const colVal = 'mytest'
   const res = an._applyFn('pgfilter.filter.ftest-1-2-3', colVal)
   tt.hasProp(res, 'val')
@@ -290,7 +291,7 @@ t.test('_applyFn must call the function with all the arguments involved', (tt) =
 t.test('_transform must return a differnt line for a mapped relation on the pgfilter file', (tt) => {
   tt.plan(2)
   let rline, dline
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const cline = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   an.check(cline)
 
@@ -305,7 +306,7 @@ t.test('_transform must return a differnt line for a mapped relation on the pgfi
 
 t.test('_filter must return false if the filterning function does not match the condition', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
   an.check(cline)
 
@@ -319,7 +320,7 @@ t.test('_filter must return false if the filterning function does not match the 
 t.test('_filter must return true if the filterning function match the condition and the line should be excluded', (tt) => {
   tt.plan(2)
   let rline, dline
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const cline = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
   an.check(cline)
 
@@ -336,7 +337,7 @@ t.test('_filter must return true if the filterning function match the condition 
 
 t.test('apply must transform the mapped column on the pgfilter file', (tt) => {
   tt.plan(2)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const line = 'COPY public.actor (actor_id, first_name, last_name, last_update) FROM stdin;'
   an.check(line)
 
@@ -348,7 +349,7 @@ t.test('apply must transform the mapped column on the pgfilter file', (tt) => {
 
 t.test('apply must filter the mapped column on the pgfilter file', (tt) => {
   tt.plan(1)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
   an.check(line)
 
@@ -359,7 +360,7 @@ t.test('apply must filter the mapped column on the pgfilter file', (tt) => {
 
 t.test('apply must filter & transform the mapped column on the pgfilter file', (tt) => {
   tt.plan(2)
-  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode)
+  const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
   const line = 'COPY public.history (history_id, actor_id, action, ip, cdate) FROM stdin;'
   an.check(line)
   MockDate.set('2022-01-18')
@@ -371,9 +372,15 @@ t.test('apply must filter & transform the mapped column on the pgfilter file', (
 })
 
 t.test('onVerboseMode return the current verbose mode', (tt) => {
-  tt.plan(2)
-  let an = new Analyzer(PGFILTER_PARSED_FILE)
+  tt.plan(5)
+  let an = new Analyzer(PGFILTER_PARSED_FILE, false)
   tt.notOk(an.onVerboseMode)
-  an = new Analyzer(PGFILTER_PARSED_FILE, true)
+  an = new Analyzer(PGFILTER_PARSED_FILE)
+  tt.notOk(an.onVerboseMode)
+  an = new Analyzer(PGFILTER_PARSED_FILE, true, loggerSpy)
+  tt.ok(an.onVerboseMode)
+  an = new Analyzer(PGFILTER_PARSED_FILE, null, loggerSpy)
+  tt.notOk(an.onVerboseMode)
+  an = new Analyzer(PGFILTER_PARSED_FILE, true, null)
   tt.ok(an.onVerboseMode)
 })
