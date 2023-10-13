@@ -1,10 +1,7 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-tabs */
-/* test/lib/utils.spec.js */
 
-const tc = require('tap')
-
-const {
+import {
   isStartOfCopyStatement,
   isEndOfCopyStatement,
   splitCopyStatement,
@@ -15,7 +12,9 @@ const {
   validFile,
   validBuffer,
   inputFromSTDIN
-} = require('../../lib/utils')
+} from '../../lib/utils.js'
+
+import tc from 'tap'
 
 const rn = () => Math.random() * 1000
 

@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
-
-const input = require('./lib/input')
-const { validJSONFile, validBackupFile, validBuffer } = require('./lib/utils')
+import yargs from 'yargs/yargs'
+import { hideBin } from 'yargs/helpers'
+import input from './lib/input'
+import { validJSONFile, validBackupFile, validBuffer } from './lib/utils'
 
 const pgfilter = yargs(hideBin(process.argv))
   .scriptName('pgfilter')

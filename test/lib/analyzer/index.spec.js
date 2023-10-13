@@ -1,11 +1,9 @@
 /* eslint-disable no-tabs */
-/* test/lib/analyzer/index.spec.js */
 
-const MockDate = require('mockdate')
-const t = require('tap')
-
-const Analyzer = require('../../../lib/analyzer')
-const { splitCopyStatement } = require('../../../lib/utils')
+import MockDate from 'mockdate'
+import t from 'tap'
+import Analyzer from '../../../lib/analyzer/index.js'
+import { splitCopyStatement } from '../../../lib/utils.js'
 
 const PGFILTER_PARSED_FILE = {
   'public.actor': {

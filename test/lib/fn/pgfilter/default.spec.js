@@ -1,12 +1,7 @@
-/* test/lib/fn/pgfilter/default.spec.js */
-'use strict'
+import t from 'tap'
+import { zlen, zlar, nul } from '../../../../lib/fn/pgfilter/default.js'
 
-const t = require('tap')
-const test = t.test
-
-const { zlen, zlar, nul } = require('../../../../lib/fn/pgfilter/default')
-
-test('pgfilter.default namespace function test suit', (t) => {
+t.test('pgfilter.default namespace function test suit', (t) => {
   t.plan(3)
   t.equal(zlen('test'), '')
   t.equal(zlar('test'), '{}')

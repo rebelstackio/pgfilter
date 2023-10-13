@@ -1,11 +1,8 @@
-/* test/lib/fn/pgfilter/default.spec.js */
-'use strict'
+import MockDate from 'mockdate'
+import t from 'tap'
+import { fnow, ftest } from '../../../../lib/fn/pgfilter/filter.js'
 
-const MockDate = require('mockdate')
-const t = require('tap')
 const test = t.test
-
-const { fnow, ftest } = require('../../../../lib/fn/pgfilter/filter')
 
 test('pgfilter.filter namespace function test suit', (tc) => {
   tc.plan(18)
