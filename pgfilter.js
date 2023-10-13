@@ -2,8 +2,8 @@
 
 import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
-import input from './lib/input'
-import { validJSONFile, validBackupFile, validBuffer } from './lib/utils'
+import input from './lib/input.js'
+import { validJSONFile, validBackupFile, validBuffer } from './lib/utils.js'
 
 const pgfilter = yargs(hideBin(process.argv))
   .scriptName('pgfilter')
