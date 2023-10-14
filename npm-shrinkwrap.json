@@ -10,8 +10,8 @@
       "license": "MIT",
       "dependencies": {
         "@faker-js/faker": "7.4.0",
-        "split2": "4.1.0",
-        "yargs": "17.5.1"
+        "split2": "4.2.0",
+        "yargs": "17.7.2"
       },
       "bin": {
         "pgfilter": "pgfilter.js"
@@ -22,7 +22,7 @@
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "eslint": "^8.51.0",
-        "esmock": "^2.5.2",
+        "esmock": "^2.5.4",
         "husky": "^8.0.3",
         "markdownlint-cli2": "^0.10.0",
         "mockdate": "^3.0.5",
@@ -3652,20 +3652,6 @@
         "node": ">=12"
       }
     },
-    "node_modules/c8/node_modules/cliui": {
-      "version": "8.0.1",
-      "resolved": "https://registry.npmjs.org/cliui/-/cliui-8.0.1.tgz",
-      "integrity": "sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==",
-      "dev": true,
-      "dependencies": {
-        "string-width": "^4.2.0",
-        "strip-ansi": "^6.0.1",
-        "wrap-ansi": "^7.0.0"
-      },
-      "engines": {
-        "node": ">=12"
-      }
-    },
     "node_modules/c8/node_modules/find-up": {
       "version": "5.0.0",
       "resolved": "https://registry.npmjs.org/find-up/-/find-up-5.0.0.tgz",
@@ -3738,24 +3724,6 @@
       },
       "funding": {
         "url": "https://github.com/sponsors/sindresorhus"
-      }
-    },
-    "node_modules/c8/node_modules/yargs": {
-      "version": "17.7.2",
-      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.2.tgz",
-      "integrity": "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==",
-      "dev": true,
-      "dependencies": {
-        "cliui": "^8.0.1",
-        "escalade": "^3.1.1",
-        "get-caller-file": "^2.0.5",
-        "require-directory": "^2.1.1",
-        "string-width": "^4.2.3",
-        "y18n": "^5.0.5",
-        "yargs-parser": "^21.1.1"
-      },
-      "engines": {
-        "node": ">=12"
       }
     },
     "node_modules/c8/node_modules/yargs-parser": {
@@ -4167,13 +4135,16 @@
       }
     },
     "node_modules/cliui": {
-      "version": "7.0.4",
-      "resolved": "https://registry.npmjs.org/cliui/-/cliui-7.0.4.tgz",
-      "integrity": "sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==",
+      "version": "8.0.1",
+      "resolved": "https://registry.npmjs.org/cliui/-/cliui-8.0.1.tgz",
+      "integrity": "sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==",
       "dependencies": {
         "string-width": "^4.2.0",
-        "strip-ansi": "^6.0.0",
+        "strip-ansi": "^6.0.1",
         "wrap-ansi": "^7.0.0"
+      },
+      "engines": {
+        "node": ">=12"
       }
     },
     "node_modules/code-excerpt": {
@@ -5507,9 +5478,9 @@
       }
     },
     "node_modules/esmock": {
-      "version": "2.5.2",
-      "resolved": "https://registry.npmjs.org/esmock/-/esmock-2.5.2.tgz",
-      "integrity": "sha512-XZUzyaM02xs9ZwhOkWRQ3JIfRe5qdaN935fsRgkOAXPzZomz+HUq+t0YsDipHzA9X6ke89FerZDRAMDgchBjeQ==",
+      "version": "2.5.4",
+      "resolved": "https://registry.npmjs.org/esmock/-/esmock-2.5.4.tgz",
+      "integrity": "sha512-BqKo7kEFHWOpyklgSbFgnQV5VXRB1aCV/3X8l0hCo3jKQFGwEMdE4EF1GxerAMBbFFbfyhr0Kutkp71YAQ+m9A==",
       "dev": true,
       "engines": {
         "node": ">=14.16.0"
@@ -14279,9 +14250,9 @@
       "dev": true
     },
     "node_modules/split2": {
-      "version": "4.1.0",
-      "resolved": "https://registry.npmjs.org/split2/-/split2-4.1.0.tgz",
-      "integrity": "sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ==",
+      "version": "4.2.0",
+      "resolved": "https://registry.npmjs.org/split2/-/split2-4.2.0.tgz",
+      "integrity": "sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==",
       "engines": {
         "node": ">= 10.x"
       }
@@ -15962,17 +15933,17 @@
       }
     },
     "node_modules/yargs": {
-      "version": "17.5.1",
-      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.5.1.tgz",
-      "integrity": "sha512-t6YAJcxDkNX7NFYiVtKvWUz8l+PaKTLiL63mJYWR2GnHq2gjEWISzsLp9wg3aY36dY1j+gfIEL3pIF+XlJJfbA==",
+      "version": "17.7.2",
+      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.2.tgz",
+      "integrity": "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==",
       "dependencies": {
-        "cliui": "^7.0.2",
+        "cliui": "^8.0.1",
         "escalade": "^3.1.1",
         "get-caller-file": "^2.0.5",
         "require-directory": "^2.1.1",
         "string-width": "^4.2.3",
         "y18n": "^5.0.5",
-        "yargs-parser": "^21.0.0"
+        "yargs-parser": "^21.1.1"
       },
       "engines": {
         "node": ">=12"
@@ -15988,9 +15959,9 @@
       }
     },
     "node_modules/yargs/node_modules/yargs-parser": {
-      "version": "21.0.0",
-      "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.0.0.tgz",
-      "integrity": "sha512-z9kApYUOCwoeZ78rfRYYWdiU/iNL6mwwYlkkZfJoyMR1xps+NEBX5X7XmRpxkZHhXJ6+Ey00IwKxBBSW9FIjyA==",
+      "version": "21.1.1",
+      "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.1.1.tgz",
+      "integrity": "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==",
       "engines": {
         "node": ">=12"
       }
@@ -18610,17 +18581,6 @@
         "yargs-parser": "^21.1.1"
       },
       "dependencies": {
-        "cliui": {
-          "version": "8.0.1",
-          "resolved": "https://registry.npmjs.org/cliui/-/cliui-8.0.1.tgz",
-          "integrity": "sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==",
-          "dev": true,
-          "requires": {
-            "string-width": "^4.2.0",
-            "strip-ansi": "^6.0.1",
-            "wrap-ansi": "^7.0.0"
-          }
-        },
         "find-up": {
           "version": "5.0.0",
           "resolved": "https://registry.npmjs.org/find-up/-/find-up-5.0.0.tgz",
@@ -18666,21 +18626,6 @@
           "dev": true,
           "requires": {
             "p-limit": "^3.0.2"
-          }
-        },
-        "yargs": {
-          "version": "17.7.2",
-          "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.2.tgz",
-          "integrity": "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==",
-          "dev": true,
-          "requires": {
-            "cliui": "^8.0.1",
-            "escalade": "^3.1.1",
-            "get-caller-file": "^2.0.5",
-            "require-directory": "^2.1.1",
-            "string-width": "^4.2.3",
-            "y18n": "^5.0.5",
-            "yargs-parser": "^21.1.1"
           }
         },
         "yargs-parser": {
@@ -18955,12 +18900,12 @@
       }
     },
     "cliui": {
-      "version": "7.0.4",
-      "resolved": "https://registry.npmjs.org/cliui/-/cliui-7.0.4.tgz",
-      "integrity": "sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==",
+      "version": "8.0.1",
+      "resolved": "https://registry.npmjs.org/cliui/-/cliui-8.0.1.tgz",
+      "integrity": "sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==",
       "requires": {
         "string-width": "^4.2.0",
-        "strip-ansi": "^6.0.0",
+        "strip-ansi": "^6.0.1",
         "wrap-ansi": "^7.0.0"
       }
     },
@@ -19917,9 +19862,9 @@
       "dev": true
     },
     "esmock": {
-      "version": "2.5.2",
-      "resolved": "https://registry.npmjs.org/esmock/-/esmock-2.5.2.tgz",
-      "integrity": "sha512-XZUzyaM02xs9ZwhOkWRQ3JIfRe5qdaN935fsRgkOAXPzZomz+HUq+t0YsDipHzA9X6ke89FerZDRAMDgchBjeQ==",
+      "version": "2.5.4",
+      "resolved": "https://registry.npmjs.org/esmock/-/esmock-2.5.4.tgz",
+      "integrity": "sha512-BqKo7kEFHWOpyklgSbFgnQV5VXRB1aCV/3X8l0hCo3jKQFGwEMdE4EF1GxerAMBbFFbfyhr0Kutkp71YAQ+m9A==",
       "dev": true
     },
     "espree": {
@@ -26107,9 +26052,9 @@
       "dev": true
     },
     "split2": {
-      "version": "4.1.0",
-      "resolved": "https://registry.npmjs.org/split2/-/split2-4.1.0.tgz",
-      "integrity": "sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ=="
+      "version": "4.2.0",
+      "resolved": "https://registry.npmjs.org/split2/-/split2-4.2.0.tgz",
+      "integrity": "sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg=="
     },
     "ssri": {
       "version": "10.0.5",
@@ -27313,23 +27258,23 @@
       "requires": {}
     },
     "yargs": {
-      "version": "17.5.1",
-      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.5.1.tgz",
-      "integrity": "sha512-t6YAJcxDkNX7NFYiVtKvWUz8l+PaKTLiL63mJYWR2GnHq2gjEWISzsLp9wg3aY36dY1j+gfIEL3pIF+XlJJfbA==",
+      "version": "17.7.2",
+      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.2.tgz",
+      "integrity": "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==",
       "requires": {
-        "cliui": "^7.0.2",
+        "cliui": "^8.0.1",
         "escalade": "^3.1.1",
         "get-caller-file": "^2.0.5",
         "require-directory": "^2.1.1",
         "string-width": "^4.2.3",
         "y18n": "^5.0.5",
-        "yargs-parser": "^21.0.0"
+        "yargs-parser": "^21.1.1"
       },
       "dependencies": {
         "yargs-parser": {
-          "version": "21.0.0",
-          "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.0.0.tgz",
-          "integrity": "sha512-z9kApYUOCwoeZ78rfRYYWdiU/iNL6mwwYlkkZfJoyMR1xps+NEBX5X7XmRpxkZHhXJ6+Ey00IwKxBBSW9FIjyA=="
+          "version": "21.1.1",
+          "resolved": "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.1.1.tgz",
+          "integrity": "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="
         }
       }
     },

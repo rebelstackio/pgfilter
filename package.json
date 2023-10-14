@@ -52,8 +52,8 @@
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "7.4.0",
-    "split2": "4.1.0",
-    "yargs": "17.5.1"
+    "split2": "4.2.0",
+    "yargs": "17.7.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
@@ -61,7 +61,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "eslint": "^8.51.0",
-    "esmock": "^2.5.2",
+    "esmock": "^2.5.4",
     "husky": "^8.0.3",
     "markdownlint-cli2": "^0.10.0",
     "mockdate": "^3.0.5",
