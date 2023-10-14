@@ -51,7 +51,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@faker-js/faker": "7.4.0",
+    "@faker-js/faker": "8.1.0",
     "split2": "4.2.0",
     "yargs": "17.7.2"
   },

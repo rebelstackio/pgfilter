@@ -1,28 +1,28 @@
 {
-	"public.actor": {
-		"first_name": "faker.name.firstName",
-		"last_name": "faker.name.lastName"
-	},
-	"public.address": {
-		"address": "faker.address.street",
-		"address2": "faker.address.street",
-		"phone": "faker.phone.number"
-	},
-	"public.city": {
-		"city": "faker.address.city"
-	},
-	"public.country": {
-		"country": "faker.address.country"
-	},
-	"public.customer": {
-		"first_name": "faker.name.firstName",
-		"last_name": "faker.name.lastName",
-		"email": "faker.internet.exampleEmail"
-	},
-	"public.amount": {
-		"amount": "faker.datatype.number"
-	},
-	"public.payment": {
-		"amount": "faker.finance.amount"
-	}
+  "public.actor": {
+    "first_name": "faker.person.firstName",
+    "last_name": "faker.person.lastName"
+  },
+  "public.address": {
+    "address": "faker.location.street",
+    "address2": "faker.location.street",
+    "phone": "faker.phone.number"
+  },
+  "public.city": {
+    "city": "faker.location.city"
+  },
+  "public.country": {
+    "country": "faker.location.country"
+  },
+  "public.customer": {
+    "first_name": "faker.person.firstName",
+    "last_name": "faker.person.lastName",
+    "email": "faker.internet.exampleEmail"
+  },
+  "public.amount": {
+    "amount": "faker.datatype.number"
+  },
+  "public.payment": {
+    "amount": "faker.finance.amount"
+  }
 }
