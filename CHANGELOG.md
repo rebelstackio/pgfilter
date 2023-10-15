@@ -1,3 +1,23 @@
+# [2.0.0](https://github.com/rebelstackio/pgfilter/compare/v1.5.0...v2.0.0) (2023-10-15)
+
+
+### Bug Fixes
+
+* fix integration tests ([4af22df](https://github.com/rebelstackio/pgfilter/commit/4af22df3155b115891cb313d2f22beb19da2d8ea))
+* lint issue ([1b26b33](https://github.com/rebelstackio/pgfilter/commit/1b26b331b35ae520efd43c85de499537309a7b5a))
+
+
+### Code Refactoring
+
+* remove support for node 16 ([ad2d890](https://github.com/rebelstackio/pgfilter/commit/ad2d8909eb15006a54acf5c4124331ec1c3152d5))
+* update dependecies ([4d37c50](https://github.com/rebelstackio/pgfilter/commit/4d37c5092d2ee43fe6aa920c591aa595e2557f52))
+
+
+### BREAKING CHANGES
+
+* Update @faker-js@faker to 8.1.0
+* add support for node 18 and fix all the dependecies issues
+
 # [1.5.0](https://github.com/rebelstackio/pgfilter/compare/v1.4.0...v1.5.0) (2022-08-31)
 
 
