@@ -107,11 +107,11 @@ All the functions on [faker.js](https://github.com/faker-js/faker) API are avail
 
 For example:
 
-- `faker.name.firstName`
-- `faker.name.middleName`
-- `faker.company.companyName`
-- `faker.random.number`
+- `faker.person.firstName`
+- `faker.person.middleName`
+- `faker.company.name`
+- `faker.number.int`
 - `faker.internet.password`
 
 
-For more information. Check [faker API methods](https://github.com/faker-js/faker#-modules)
+For more information. Check [faker API methods](https://fakerjs.dev/api/)

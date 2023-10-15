@@ -5,7 +5,7 @@
 # pgfilter
 
 CLI to filter or transform data during the restoration process for Postgres databases.
-It uses a JSON file to define which tables and columns should be anonymized or
+It uses a JSON file to define which tables and columns should be anonymized( by using the popular [fakerjs](https://fakerjs.dev/api/) library) or
 filtered with various methods, protecting your sensitive data and making a
 skinny version of your database for third-party resources involved in your
 development/QA process.
@@ -103,9 +103,9 @@ the last 60 days, the pgfilter-file will be the following:
 // myconfig.json
 {
 	"public.users" : { // Table users
-		"name"    : "faker.name.firstName", // Apply function firstName to column name
-		"lastname": "faker.name.lastName", // Apply function lastName to column lastname
-		"addr1"   : "faker.address.streetAddress", // Apply function streetAddress to column addr1
+		"name"    : "faker.person.firstName", // Apply function firstName to column name
+		"lastname": "faker.person.lastName", // Apply function lastName to column lastname
+		"addr1"   : "faker.location.streetAddress", // Apply function streetAddress to column addr1
 		"email"   : "faker.internet.email" // Apply function email to column email
 	},
 	"public.requests": { // Table requests
