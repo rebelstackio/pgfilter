@@ -56,19 +56,19 @@
     "yargs": "17.7.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.2",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/cli": "^17.8.0",
+    "@commitlint/config-conventional": "^17.8.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "eslint": "^8.51.0",
-    "esmock": "^2.5.4",
+    "esmock": "^2.5.6",
     "husky": "^8.0.3",
     "markdownlint-cli2": "^0.10.0",
     "mockdate": "^3.0.5",
     "semantic-release": "^22.0.5",
     "snazzy": "^9.0.0",
     "standard": "^17.1.0",
-    "tap": "^18.5.0"
+    "tap": "^18.5.2"
   },
   "publishConfig": {
     "access": "public"
