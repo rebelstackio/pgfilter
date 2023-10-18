@@ -7,8 +7,8 @@ import { splitCopyStatement } from '../../../lib/utils.js'
 
 const PGFILTER_PARSED_FILE = {
   'public.actor': {
-    first_name: 'faker.name.firstName',
-    last_name: 'faker.name.lastName'
+    first_name: 'faker.person.firstName',
+    last_name: 'faker.person.lastName'
   },
   'public.address': {
     address: 'faker.address.streetName',
@@ -22,8 +22,8 @@ const PGFILTER_PARSED_FILE = {
     country: 'faker.address.country'
   },
   'public.customer': {
-    first_name: 'faker.name.firstName',
-    last_name: 'faker.name.lastName',
+    first_name: 'faker.person.firstName',
+    last_name: 'faker.person.lastName',
     email: 'faker.internet.email'
   },
   'public.amount': {
@@ -201,8 +201,8 @@ t.test('_setAffectedColumns must set an array of function labels for transformat
 
   tt.ok(Array.isArray(an.affectedTransColnsFn))
   tt.equal(an.affectedTransColnsFn.length, 2)
-  tt.equal(an.affectedTransColnsFn[0], 'faker.name.firstName') // first_name
-  tt.equal(an.affectedTransColnsFn[1], 'faker.name.lastName') // last_name
+  tt.equal(an.affectedTransColnsFn[0], 'faker.person.firstName') // first_name
+  tt.equal(an.affectedTransColnsFn[1], 'faker.person.lastName') // last_name
 })
 
 t.test('_setAffectedColumns must set an array with the index positions of the columns that requires filtering and transformation', (tt) => {
@@ -268,7 +268,7 @@ t.test('_applyFn must change the val argument if the function label is valid', (
   tt.plan(1)
   const an = new Analyzer(PGFILTER_PARSED_FILE, verboseMode, loggerSpy)
 
-  tt.not(an._applyFn('faker.name.firstName', 'John'), 'John')
+  tt.not(an._applyFn('faker.person.firstName', 'John'), 'John')
 })
 
 t.test('_applyFn must call the function with all the arguments involved', (tt) => {
