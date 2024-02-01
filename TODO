@@ -1,2 +1,4 @@
 TODO: Research faker-js seed
+TODO: Check https://www.npmjs.com/package/memorystream for test the matcher  https://getsimple.works/testing-nodejs-streams
+TODO: Integration test with filter
 
